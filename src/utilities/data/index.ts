@@ -1,0 +1,1 @@
+export { gpoData } from './data'
