@@ -1,5 +1,3 @@
 export {
-  type BulkCreationData,
-  type CustomerDataType,
-  BulkCreationDataInitialData
+  type productDataType,
 } from './interfaces'

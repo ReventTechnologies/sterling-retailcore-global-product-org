@@ -1,0 +1,1 @@
+export { ProductFrame } from './ProductFrame'

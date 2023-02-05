@@ -25,7 +25,6 @@ interface MessageAction {
   type: keyof ActionTypes
   payload: any
 }
-
 export type setRolesAndPermissionsActionTypes = MessageAction
 
 export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {

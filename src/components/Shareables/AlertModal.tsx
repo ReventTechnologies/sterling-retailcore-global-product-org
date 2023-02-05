@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { error, warning, rightArrow, leftArrow, Close, Success } from 'Assets/svgs'
 import Spinner from './Spinner'
 
@@ -9,21 +7,25 @@ type Props = {
   rightClick?: () => void
   rightClickText?: string
   message?: string
+  loadingMessage?: string
   closeModal: () => void
   loading: boolean
   status?: 'success' | 'error' | 'warning'
   isOpen: boolean
+  showDate?: boolean
 }
 const AlertModal = ({
   leftClick,
   leftClickText = 'Return to Dashboard',
   rightClick,
-  rightClickText = 'Configure another form',
+  rightClickText,
   message,
+  loadingMessage,
   closeModal,
   loading,
   status,
   isOpen,
+  showDate = false
 }: Props) => {
   return (
     <aside
@@ -33,19 +35,18 @@ const AlertModal = ({
       }}
     >
       <div
-        className={`${loading ? 'min-h-[100px] min-w-[120px]' : 'min-h-[300px] min-w-[500px]'}  ${
-          loading ? 'flex justify-center items-center' : ''
-        } bg-white p-6 rounded-2xl `}
+        className={`${loading ? 'min-h-[6.25rem] min-w-[7.5rem]' : 'min-h-[18.75rem] min-w-[31.25rem]'}  ${loading ? 'flex justify-center items-center' : ''
+          } bg-white p-6 rounded-2xl `}
       >
         {loading && (
           <div className='flex flex-col items-center justify-center p-2 text-text-secondary w-fit h-fit'>
             <Spinner size='large' />
-            <h6 className='m-auto'>Saving...</h6>
+            <h6 className='m-auto mt-2'>{loadingMessage ? `${loadingMessage}...` : ''}</h6>
           </div>
         )}
 
         {!loading && (
-          <div className=' w-full  min-h-[300px] flex flex-col justify-between'>
+          <div className=' w-full  min-h-[18.75rem] flex flex-col justify-between'>
             <div className='flex justify-end'>
               <button onClick={closeModal}>
                 <img src={Close} />
@@ -62,22 +63,26 @@ const AlertModal = ({
             <div className='flex items-center justify-center font-light text-text-secondary'>
               <h6>{message}</h6>
             </div>
+            {
+              showDate ?
+                <div className='flex items-center justify-center font-light text-text-secondary'>
+                  <h6>
+                    DATE AND TIME: {new Date().toDateString()}[{new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}]
+                  </h6>
+                </div>
+                : null
+            }
 
-            <div className='flex items-center justify-center font-light text-text-secondary'>
-              <h6>
-                DATE AND TIME: {new Date().toDateString()}[{new Date().toLocaleTimeString('en-US', { hour12: true })}]
-              </h6>
-            </div>
-
-            <div className='flex justify-between text-text-secondary'>
-              <button className='flex items-center justify-center' onClick={leftClick}>
+            <div className={`flex ${leftClickText && rightClickText ? "justify-between" : "justify-center"} text-text-secondary`}>
+              {leftClickText && <button className='flex items-center justify-center' onClick={leftClick}>
                 <img src={leftArrow} alt='' className='mr-2' />
                 <span>{leftClickText}</span>
-              </button>
-              <button className='flex items-center justify-center' onClick={rightClick}>
-                {rightClickText}
-                <img className='ml-2' src={rightArrow} alt='' />
-              </button>
+              </button>}
+              {rightClickText &&
+                <button className='flex items-center justify-center' onClick={rightClick}>
+                  {rightClickText}
+                  <img className='ml-2' src={rightArrow} alt='' />
+                </button>}
             </div>
           </div>
         )}
