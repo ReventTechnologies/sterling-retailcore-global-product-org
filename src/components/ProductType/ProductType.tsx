@@ -31,13 +31,13 @@ export const ProductType = ({ product, index, updateProductTypeName, productInde
       draggable
       onDragStart={(e) => drag(e, product)}
       id={product.id}
-      className={`flex justify-center shadow-md items-center w-full h-[2.125rem] px-5 gap-x-5 rounded-[0.3125rem] mb-2 bg-white border border-[#AAAAAA] font-normal`}
+      className={`flex hover:cursor-grab justify-center shadow-md items-center w-full h-[2.125rem] px-5 gap-x-5 rounded-[0.3125rem] mb-2 bg-white border border-[#AAAAAA] font-normal`}
     >
       <img src={dots} />
       {
         allowEdit ? <span className={`grow`}>
 
-          <input type="text" className={`w-full border rounded-md text-[.875rem]`} value={name} onChange={onNameChange} />
+          <input type="text" className={`w-full border rounded-md text-[.875rem]`} value={name} onChange={onNameChange} onBlur={() => setAllowEdit(false)} />
         </span>
           :
           <span className={`grow text-[.875rem]`}>{product.name}</span>
@@ -51,29 +51,3 @@ export const ProductType = ({ product, index, updateProductTypeName, productInde
     </div>
   )
 }
-
-// {"data":[
-// 	{
-// 	"product_category": "Payment",
-// 	"recently_updated_column": "product_category",
-// 	"description": "Payment product"
-// 	},
-// 	{
-// 	"product_category": "Deposit",
-// 	"recently_updated_column": "product_category",
-// 	"description": "Deposit product"
-// 	},
-// 	{
-// 	"product_category": "Credit",
-// 	"recently_updated_column": "product_category",
-// 	"description": "Credit product"
-// 	},
-// 	{
-// 	"product_category": "Investment",
-// 	"recently_updated_column": "product_category",
-// 	"description": "Investment product"
-// 	}
-// ],
-//  "created_by_id": "b5fee30d-b6dc-457e-850e-d60a3c9ff8c5",
-// 	"created_by": "Gideon"
-// }

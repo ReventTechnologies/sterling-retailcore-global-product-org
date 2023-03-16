@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
+// import jwtDecode from 'jwt-decode';
 import { dots, info, NavigationIcon } from 'Assets/svgs'
 import { EditIcon } from 'Assets/svgs/EditIcon'
 import { Button } from 'Components/Button'
@@ -22,6 +23,7 @@ const breadCrumbsList = [{
   text: 'GLOBAL PRODUCT ORGANIZATION',
   link: '/form',
 }]
+
 interface Props {
 
 }
@@ -94,71 +96,76 @@ export const Main = ({ }: Props) => {
     setProductData(() => [...resetData])
     // setDragOver(false)
     localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: false }))
+    setIsEdited(false)
   }, [productData, productCategoriesData])
   // Open And Close Modals 
   const closeSaveGPOModal = useCallback(() => {
     setSaveModalLoading(false)
+    dispatch(getProductCategories())
+    localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: false }))
+    setIsEdited(false)
+    dispatch(updateGPOSavedState(false))
   }, [saveModalLoading])
 
-  const drop = useCallback(
-    (ev: any, passedId?: string) => {
-      ev.preventDefault()
+  const drop = useCallback((ev: any, passedId?: string) => {
+    ev.preventDefault()
 
 
-      let productTypeId: string = passedId ? passedId : ev.dataTransfer.getData("productId");
-      console.log(productTypeId)
-      const tempProductData = productData
-      const targetProductData = productData[productDataIndex]
-      const tempSourceProductData = productData.find((data) => {
-        const found = data.product_types.find((product) => {
-          if (productTypeId === product.product_type_id) {
-            return product
-          }
-        })
-        if (found) {
-          return data
+    let productTypeId: string = passedId ? passedId : ev.dataTransfer.getData("productId");
+    console.log(productTypeId)
+    const tempProductData = productData
+    const targetProductData = productData[productDataIndex]
+    const tempSourceProductData = productData.find((data) => {
+      const found = data.product_types.find((product) => {
+        if (productTypeId === product.product_type_id) {
+          return product
         }
       })
-      const tempSourceProductDataIndex = tempProductData.findIndex((tempProduct) => tempProduct.product_category_id === tempSourceProductData.product_category_id)
-      const targetProduct = tempSourceProductData.product_types.find((product) => product.product_type_id === productTypeId)
-      const targetProductIndex = tempSourceProductData.product_types.findIndex((product) => product.product_type_id === productTypeId)
-      targetProduct.product_category_id = targetProductData.product_category_id
-
-      targetProductData.product_types.push(targetProduct)
-      tempSourceProductData.product_types.splice(targetProductIndex, 1)
-      tempProductData.splice(productDataIndex, 1, targetProductData)
-      tempProductData.splice(tempSourceProductDataIndex, 1, tempSourceProductData)
-
-      const dataToSaveCopy = dataToSave
-      const foundProductTypeIndex = dataToSaveCopy.productTypes.findIndex((productType) => productType.product_type_id === productTypeId)
-      if (foundProductTypeIndex > -1) {
-        const productTypeCopy = dataToSaveCopy.productTypes[foundProductTypeIndex]
-        // productTypeCopy.product_type_id = productTypeId
-
-        productTypeCopy.data.product_category_id = targetProductData.product_category_id
-        productTypeCopy.data.product_category = targetProductData.product_category
-        productTypeCopy.data.description = targetProductData.description
-        productTypeCopy.data.recently_updated_column = "product_category_id"
-
-        dataToSaveCopy.productTypes.splice(foundProductTypeIndex, 1, productTypeCopy)
-
-      } else {
-        dataToSaveCopy.productTypes.push({
-          product_type_id: productTypeId,
-          data: {
-            product_category_id: targetProductData.product_category_id,
-            product_category: targetProductData.product_category,
-            description: targetProductData.description,
-            recently_updated_column: "product_category_id"
-          }
-        })
+      if (found) {
+        return data
       }
-      setDataToSave(() => ({ ...dataToSaveCopy }))
-      setProductData(() => [...tempProductData])
-      // console.log(tempSourceProductData)
-      // console.log(targetProductData)
-      localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: true }))
-    }, [productData, productDataIndex, dataToSave])
+    })
+    const tempSourceProductDataIndex = tempProductData.findIndex((tempProduct) => tempProduct.product_category_id === tempSourceProductData.product_category_id)
+    const targetProduct = tempSourceProductData.product_types.find((product) => product.product_type_id === productTypeId)
+    const targetProductIndex = tempSourceProductData.product_types.findIndex((product) => product.product_type_id === productTypeId)
+    targetProduct.product_category_id = targetProductData.product_category_id
+
+    targetProductData.product_types.push(targetProduct)
+    tempSourceProductData.product_types.splice(targetProductIndex, 1)
+    tempProductData.splice(productDataIndex, 1, targetProductData)
+    tempProductData.splice(tempSourceProductDataIndex, 1, tempSourceProductData)
+
+    const dataToSaveCopy = dataToSave
+    const foundProductTypeIndex = dataToSaveCopy.productTypes.findIndex((productType) => productType.product_type_id === productTypeId)
+    if (foundProductTypeIndex > -1) {
+      const productTypeCopy = dataToSaveCopy.productTypes[foundProductTypeIndex]
+      // productTypeCopy.product_type_id = productTypeId
+
+      productTypeCopy.data.product_category_id = targetProductData.product_category_id
+      productTypeCopy.data.product_category = targetProductData.product_category
+      productTypeCopy.data.description = targetProductData.description
+      productTypeCopy.data.recently_updated_column = "product_category_id"
+
+      dataToSaveCopy.productTypes.splice(foundProductTypeIndex, 1, productTypeCopy)
+
+    } else {
+      dataToSaveCopy.productTypes.push({
+        product_type_id: productTypeId,
+        data: {
+          product_category_id: targetProductData.product_category_id,
+          product_category: targetProductData.product_category,
+          description: targetProductData.description,
+          recently_updated_column: "product_category_id"
+        }
+      })
+    }
+    setDataToSave(() => ({ ...dataToSaveCopy }))
+    setProductData(() => [...tempProductData])
+    // console.log(tempSourceProductData)
+    // console.log(targetProductData)
+    localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: true }))
+    setIsEdited(true)
+  }, [productData, productDataIndex, dataToSave])
 
   const updateProductTypeName = useCallback((productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => {
     const tempProductData = productData
@@ -204,20 +211,14 @@ export const Main = ({ }: Props) => {
     setDataToSave(() => ({ ...dataToSaveCopy }))
     setProductData(() => [...tempProductData])
     localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: true }))
+    setIsEdited(true)
   }, [productData, dataToSave])
 
   useEffect(() => {
-    if (!productData.length || saveGPOSaved) {
-      dispatch(getProductCategories())
-      if (saveGPOSaved) {
-        localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: false }))
-        dispatch(updateGPOSavedState(false))
-      }
-    } else {
-      const productCategoriesProccess = localStorage.getItem("productCategoryProccess") ? JSON.parse(localStorage.getItem("productCategoryProccess")) : { edited: false }
-      setIsEdited(productCategoriesProccess.edited)
-    }
-  }, [productData, saveGPOSaved])
+    dispatch(getProductCategories())
+    localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: false }))
+    setIsEdited(false)
+  }, [])
 
 
   useEffect(() => {
@@ -283,7 +284,7 @@ export const Main = ({ }: Props) => {
           closeModal={closeSaveGPOModal}
           status={saveGPOSuccess ? `success` : saveGPOError ? 'error' : "warning"}
           loadingMessage={`Saving`}
-          message={saveGPOMessage}
+          message={saveGPOError ? 'An Error occurred please try again!' : saveGPOSuccess && userProfileData?.tenant_admin ? 'Configuration Saved Successfully!' : saveGPOMessage}
         />
       </main>
     </>
