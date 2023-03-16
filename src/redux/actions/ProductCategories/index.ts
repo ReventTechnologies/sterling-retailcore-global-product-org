@@ -1,5 +1,4 @@
 export {
-  baseUrl,
   type setProductCategoriesActionTypes,
   getProductCategories,
   saveGPO

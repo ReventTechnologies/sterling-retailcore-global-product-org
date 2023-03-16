@@ -1,4 +1,7 @@
-export const baseUrl = "https://product-management-api-dev.reventtechnologies.com"
+// export const baseUrl = "https://product-management-api-dev.reventtechnologies.com"
+const ReventBaseUrl = process.env.REVENT_BASE_URL
+// const PrunedgeAccountingUrl = process.env.PRUNEDGE_ACCOUNTING_URL
+const ENVIRONMENT = process.env.ENVIRONMENT
 // /v1/product-category/
 
 // import axios from 'axios'
@@ -42,7 +45,15 @@ export const getProductCategories = () => async (dispatch: Dispatch) => {
       type: GET_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const { data } = await axios.get(`${baseUrl}/v1/product-category`)
+    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        environment: ENVIRONMENT,
+      },
+    }
+    const { data } = await axios.get(`${ReventBaseUrl}/product-category`, config)
     console.log(data)
     if (data.status === 'success') {
       dispatch({
@@ -65,7 +76,16 @@ export const saveGPO = (gpoData) => async (dispatch: Dispatch) => {
       type: SAVE_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const { data } = await axios.patch(`${baseUrl}/v1/global-product-organization/product-types`, gpoData)
+    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        environment: ENVIRONMENT,
+      },
+    }
+
+    const { data } = await axios.patch(`${ReventBaseUrl}/global-product-organization/product-types`, gpoData, config)
     //  console.log(data)
     if (data?.status === 'success') {
       dispatch({
