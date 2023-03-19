@@ -5,12 +5,23 @@ interface Props {
   data: any
   productIndex: number
   dragLeave: (ev: any) => void
+  currentEditId: string
+  setCurrentEditId: (ev: any) => void
   drop: (ev: any, passedId?: string) => void
   allowDrop: (ev: any, index: number) => void
   updateProductTypeName: (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => void
 }
 
-export const ProductFrame = ({ data, dragLeave, allowDrop, drop, productIndex, updateProductTypeName }: Props) => {
+export const ProductFrame = ({
+  data,
+  currentEditId,
+  productIndex,
+  drop,
+  dragLeave,
+  allowDrop,
+  setCurrentEditId,
+  updateProductTypeName
+}: Props) => {
 
 
 
@@ -26,7 +37,15 @@ export const ProductFrame = ({ data, dragLeave, allowDrop, drop, productIndex, u
       <div className={`grow border border-[#AAAAAA] w-full rounded-[0.5rem] p-5`}>
         {
           data.product_types.map((product, index) => (
-            <ProductType key={index} product={product} updateProductTypeName={updateProductTypeName} index={index} productIndex={productIndex} />
+            <ProductType
+              currentEditId={currentEditId}
+              setCurrentEditId={setCurrentEditId}
+              key={index}
+              product={product}
+              updateProductTypeName={updateProductTypeName}
+              index={index}
+              productIndex={productIndex}
+            />
           ))
         }
 

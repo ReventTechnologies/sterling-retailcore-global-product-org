@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { dots, info, NavigationIcon } from 'Assets/svgs'
-import { EditIcon } from 'Assets/svgs/EditIcon'
+import { info, NavigationIcon } from 'Assets/svgs'
 import { Button } from 'Components/Button'
 import GoBack from 'Components/MainScreenLayout/GoBack'
 import { ProductFrame } from 'Components/ProductFrame'
@@ -8,11 +7,10 @@ import AlertModal from 'Components/Shareables/AlertModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProductCategoriesTypes, SaveGPOTypes } from 'Redux/reducers/ProductCategories'
 import { ReducersType } from 'Redux/store'
-import { gpoData } from 'Utilities/data'
-import { productDataType } from 'Utilities/interfaces'
 import { getProductCategories, saveGPO } from 'Redux/actions/ProductCategories'
 import { UserProfileTypes } from 'Redux/reducers/UserPersmissions'
 import { updateGPOSavedState } from 'Redux/actions/ProductCategories/ProductCategories'
+import { useRef } from 'react'
 
 const breadCrumbsList = [{
   text: 'CONFIGURATION ENGINE',
@@ -27,6 +25,8 @@ interface Props {
 }
 
 export const Main = ({ }: Props) => {
+
+
   const dispatch: any = useDispatch()
 
   const {
@@ -63,15 +63,21 @@ export const Main = ({ }: Props) => {
   const dataTosaveInitialState = {
     "productTypes": [
     ],
-    "last_modified_by": `${userProfileData?.firstname} ${userProfileData?.lastname}`,
-    "last_modified_by_id": "b5fee30d-b6dc-457e-850e-d60a3c9ff8c5",
+    "last_modified_by": ``,
+    "last_modified_by_id": ``,
   }
   const [productData, setProductData] = useState([])
   const [dataToSave, setDataToSave] = useState(dataTosaveInitialState)
   const [productDataIndex, setProductDataIndex] = useState(null)
   const [isEdited, setIsEdited] = useState(false)
   const [saveModalLoading, setSaveModalLoading] = useState(false)
+  const [currentEditId, setCurrentEditId] = useState(null)
 
+  const Disabled = (): boolean => {
+    return (
+      !!currentEditId || !isEdited
+    )
+  }
   const allowDrop = useCallback((ev: any, index: number) => {
     ev.preventDefault()
     setProductDataIndex(index)
@@ -79,6 +85,9 @@ export const Main = ({ }: Props) => {
   }, [productDataIndex])
 
   const onSaveGPO = useCallback(() => {
+    const data = dataToSave
+    data.last_modified_by = `${userProfileData?.firstname} ${userProfileData?.lastname}`
+    data.last_modified_by_id = `${userProfileData?.id}`
     console.log(dataToSave)
     setSaveModalLoading(true)
     dispatch(saveGPO(dataToSave))
@@ -119,6 +128,11 @@ export const Main = ({ }: Props) => {
           return data
         }
       })
+
+      if (targetProductData.product_category_id === tempSourceProductData.product_category_id) {
+        return
+      }
+
       const tempSourceProductDataIndex = tempProductData.findIndex((tempProduct) => tempProduct.product_category_id === tempSourceProductData.product_category_id)
       const targetProduct = tempSourceProductData.product_types.find((product) => product.product_type_id === productTypeId)
       const targetProductIndex = tempSourceProductData.product_types.findIndex((product) => product.product_type_id === productTypeId)
@@ -203,6 +217,7 @@ export const Main = ({ }: Props) => {
     }
     setDataToSave(() => ({ ...dataToSaveCopy }))
     setProductData(() => [...tempProductData])
+    setCurrentEditId(null)
     localStorage.setItem("productCategoryProccess", JSON.stringify({ edited: true }))
   }, [productData, dataToSave])
 
@@ -249,7 +264,16 @@ export const Main = ({ }: Props) => {
                   <>
                     {
                       productData.map((data, index) => (
-                        <ProductFrame key={data?.product_category_id} data={data} allowDrop={allowDrop} dragLeave={dragLeave} drop={drop} productIndex={index} updateProductTypeName={updateProductTypeName} />
+                        <ProductFrame
+                          data={data} allowDrop={allowDrop}
+                          dragLeave={dragLeave}
+                          drop={drop}
+                          productIndex={index}
+                          updateProductTypeName={updateProductTypeName}
+                          currentEditId={currentEditId}
+                          setCurrentEditId={setCurrentEditId}
+                          key={data?.product_category_id}
+                        />
                       ))
                     }
                   </>
@@ -259,7 +283,7 @@ export const Main = ({ }: Props) => {
               <div className={`flex justify-center gap-x-5 mt-10`}>
                 <Button
                   className={`bg-transparent border border-[#AAAAAA] text-[#636363_!important] w-fit disabled:text-white`}
-                  onClick={onDiscardChanges} disabled={!isEdited}        // disabled={false}
+                  onClick={onDiscardChanges} disabled={Disabled()}        // disabled={false}
                 ><span className={`hover:text-white`}>
                     Discard Changes
                   </span>
@@ -267,7 +291,7 @@ export const Main = ({ }: Props) => {
                 </Button>
                 <Button
                   className={`bg-primay-main text-[white_!important] `}
-                  onClick={onSaveGPO} disabled={!isEdited}        // disabled={false}
+                  onClick={onSaveGPO} disabled={Disabled()}        // disabled={false}
                 >
                   Save
                 </Button>
@@ -277,13 +301,14 @@ export const Main = ({ }: Props) => {
           </div>
         </section>
         <AlertModal isOpen={productCategoriesLoading} closeModal={undefined} loading={productCategoriesLoading} loadingMessage={`Fetching`} />
+
         <AlertModal
           isOpen={saveModalLoading}
           loading={saveGPOLoading}
           closeModal={closeSaveGPOModal}
           status={saveGPOSuccess ? `success` : saveGPOError ? 'error' : "warning"}
           loadingMessage={`Saving`}
-          message={saveGPOMessage}
+          message={saveGPOError ? 'An Error occurred please try again!' : saveGPOSuccess && userProfileData?.tenant_admin ? 'Configuration Saved Successfully!' : saveGPOMessage}
         />
       </main>
     </>

@@ -14,7 +14,7 @@ module.exports = (webpackConfigEnv, argv) => {
 
   return merge(defaultConfig, {
     devServer: {
-      port: 8081,
+      port: 8082,
     },
     resolve: {
       alias: {

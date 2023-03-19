@@ -96,6 +96,7 @@
     "single-spa": "^5.9.3",
     "single-spa-react": "^4.3.1",
     "typeface-roboto": "^1.1.13",
+    "uuid": "^9.0.0",
     "webpack-xlsx-loader": "^1.0.0",
     "xlsx": "^0.18.5"
   },
