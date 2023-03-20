@@ -305,6 +305,9 @@ export const Main = ({ }: Props) => {
         <AlertModal
           isOpen={saveModalLoading}
           loading={saveGPOLoading}
+          leftClick={() => {
+            window.location.replace(`${window.location.host}`)
+          }}
           closeModal={closeSaveGPOModal}
           status={saveGPOSuccess ? `success` : saveGPOError ? 'error' : "warning"}
           loadingMessage={`Saving`}
