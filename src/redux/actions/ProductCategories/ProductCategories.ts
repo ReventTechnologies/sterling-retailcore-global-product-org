@@ -53,7 +53,7 @@ export const getProductCategories = () => async (dispatch: Dispatch) => {
         environment: ENVIRONMENT,
       },
     }
-    const { data } = await axios.get(`${ReventBaseUrl}/product-category`, config)
+    const { data } = await axios.get(`${ReventBaseUrl}/product-category/all/association`, config)
     console.log(data)
     if (data.status === 'success') {
       dispatch({
