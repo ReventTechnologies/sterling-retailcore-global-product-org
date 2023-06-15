@@ -9,11 +9,13 @@ import {
   SAVE_PRODUCT_CATEGORIES_SUCCESS,
   UPDATE_GPO_SAVED_STATE,
 } from 'Redux/constants/ProductCategories'
+import { GET_PRODUCT_CATEGORIES_SUCCESSS } from 'Redux/constants/ProductCategories/ProductCategories'
 
 interface ActionTypes {
   GET_PRODUCT_CATEGORIES_FAILED: any
   GET_PRODUCT_CATEGORIES_REQUEST: any
   GET_PRODUCT_CATEGORIES_SUCCESS: any
+  GET_PRODUCT_CATEGORIES_SUCCESSS: any
   SAVE_PRODUCT_CATEGORIES_FAILED: any
   SAVE_PRODUCT_CATEGORIES_REQUEST: any
   SAVE_PRODUCT_CATEGORIES_SUCCESS: any
@@ -55,6 +57,28 @@ export const getProductCategories = () => async (dispatch: Dispatch) => {
     if (data.status === 'success') {
       dispatch({
         type: GET_PRODUCT_CATEGORIES_SUCCESS,
+        payload: data?.data,
+      })
+    }
+  } catch (error) {
+    dispatch({
+      type: GET_PRODUCT_CATEGORIES_FAILED,
+      payload: error?.response && error.response?.data?.message ? error?.response?.data?.message : error?.message,
+    })
+  }
+}
+
+export const getProductAllCategories = () => async (dispatch: Dispatch) => {
+  try {
+    dispatch({
+      type: GET_PRODUCT_CATEGORIES_REQUEST,
+    })
+
+    const { data } = await axios.get(`${ReventBaseUrl}/product-category/all/association`, config)
+
+    if (data.status === 'success') {
+      dispatch({
+        type: GET_PRODUCT_CATEGORIES_SUCCESSS,
         payload: data?.data,
       })
     }

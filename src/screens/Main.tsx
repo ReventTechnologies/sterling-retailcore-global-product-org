@@ -1,16 +1,15 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import { info, NavigationIcon } from 'Assets/svgs'
+import { NavigationIcon, info } from 'Assets/svgs'
 import { Button } from 'Components/Button'
 import GoBack from 'Components/MainScreenLayout/GoBack'
 import { ProductFrame } from 'Components/ProductFrame'
 import AlertModal from 'Components/Shareables/AlertModal'
-import { useDispatch, useSelector } from 'react-redux'
-import { ProductCategoriesTypes, SaveGPOTypes } from 'Redux/reducers/ProductCategories'
-import { ReducersType } from 'Redux/store'
 import { getProductCategories, saveGPO } from 'Redux/actions/ProductCategories'
+import { getProductAllCategories, updateGPOSavedState } from 'Redux/actions/ProductCategories/ProductCategories'
+import { ProductCategoriesTypes, SaveGPOTypes } from 'Redux/reducers/ProductCategories'
 import { UserProfileTypes } from 'Redux/reducers/UserPersmissions'
-import { updateGPOSavedState } from 'Redux/actions/ProductCategories/ProductCategories'
-import { useRef } from 'react'
+import { ReducersType } from 'Redux/store'
+import { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const breadCrumbsList = [
   {
@@ -23,8 +22,9 @@ const breadCrumbsList = [
   },
 ]
 interface CategoryType {
-  product_category_id: string
-  product_type_id: string[]
+  currentProductCategoryId: string
+  newProductCategoryId: string
+  productTypeId: string
 }
 
 interface Props {}
@@ -37,6 +37,7 @@ export const Main = ({}: Props) => {
     success: productCategoriesSuccess,
     loading: productCategoriesLoading,
     productCategories: productCategoriesData,
+    categoryData,
   } = useSelector<ReducersType>((state) => state?.productData) as ProductCategoriesTypes
   const {
     error: userProfileError,
@@ -65,8 +66,6 @@ export const Main = ({}: Props) => {
   // "last_modified_by_id": userProfileData?.id,
   const dataTosaveInitialState = {
     productTypes: [],
-    last_modified_by: ``,
-    last_modified_by_id: ``,
   }
   const [productData, setProductData] = useState([])
   const [dataToSave, setDataToSave] = useState(dataTosaveInitialState)
@@ -78,6 +77,7 @@ export const Main = ({}: Props) => {
   const Disabled = (): boolean => {
     return !!currentEditId || !isEdited
   }
+
   const allowDrop = useCallback(
     (ev: any, index: number) => {
       ev.preventDefault()
@@ -88,24 +88,19 @@ export const Main = ({}: Props) => {
   )
 
   const onSaveGPO = useCallback(() => {
-    const data = dataToSave
-    data.last_modified_by = `${userProfileData?.firstname} ${userProfileData?.lastname}`
-    data.last_modified_by_id = `${userProfileData?.id}`
-    console.log(dataToSave)
-
     const categoryTypeMap: { [key: string]: CategoryType } = {}
+    const newArray: CategoryType[] = Object.values(categoryTypeMap)
 
     dataToSave.productTypes.forEach((obj) => {
-      const { data, product_type_id } = obj
-      const { product_category_id } = data
-      if (categoryTypeMap.hasOwnProperty(product_category_id)) {
-        categoryTypeMap[product_category_id].product_type_id.push(product_type_id)
-      } else {
-        categoryTypeMap[product_category_id] = { product_category_id, product_type_id: [product_type_id] }
+      const categoryId = categoryData?.find((a) => a.product_types.find((b) => b.product_type_id === obj.product_type_id))?.product_category_id
+      const categoryType: CategoryType = {
+        currentProductCategoryId: categoryId,
+        newProductCategoryId: obj.data.product_category_id,
+        productTypeId: obj.product_type_id,
       }
+      newArray.push(categoryType)
     })
 
-    const newArray: CategoryType[] = Object.values(categoryTypeMap)
     const newDataToSave = {
       data: newArray,
     }
@@ -120,12 +115,14 @@ export const Main = ({}: Props) => {
     ev.preventDefault()
     // setDragOver(false)
   }, [])
+
   const onDiscardChanges = useCallback(() => {
     const resetData = JSON.parse(localStorage.getItem('productCategoriesBackup'))
     setProductData(() => [...resetData])
     // setDragOver(false)
     localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: false }))
   }, [productData, productCategoriesData])
+
   // Open And Close Modals
   const closeSaveGPOModal = useCallback(() => {
     setSaveModalLoading(false)
@@ -136,7 +133,6 @@ export const Main = ({}: Props) => {
       ev.preventDefault()
 
       let productTypeId: string = passedId ? passedId : ev.dataTransfer.getData('productId')
-      console.log(productTypeId)
       const tempProductData = productData
       const targetProductData = productData[productDataIndex]
       const tempSourceProductData = productData.find((data) => {
@@ -191,8 +187,6 @@ export const Main = ({}: Props) => {
       }
       setDataToSave(() => ({ ...dataToSaveCopy }))
       setProductData(() => [...tempProductData])
-      // console.log(tempSourceProductData)
-      // console.log(targetProductData)
       localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: true }))
     },
     [productData, productDataIndex, dataToSave]
@@ -215,7 +209,6 @@ export const Main = ({}: Props) => {
       const dataToSaveCopy = dataToSave
       const foundProductTypeIndex = dataToSaveCopy.productTypes.findIndex((productType) => productType.product_type_id === productTypeId)
       if (foundProductTypeIndex > -1) {
-        console.log('exists')
         const productTypeCopy = dataToSaveCopy.productTypes[foundProductTypeIndex]
         // productTypeCopy.product_type_id = productTypeId
         productTypeCopy.data.name = productTypeName
@@ -226,7 +219,6 @@ export const Main = ({}: Props) => {
 
         dataToSaveCopy.productTypes.splice(foundProductTypeIndex, 1, productTypeCopy)
       } else {
-        console.log('does not exists')
         dataToSaveCopy.productTypes.push({
           product_type_id: productTypeId,
           data: {
@@ -249,6 +241,7 @@ export const Main = ({}: Props) => {
   useEffect(() => {
     if (!productData.length || saveGPOSaved) {
       dispatch(getProductCategories())
+      dispatch(getProductAllCategories())
       if (saveGPOSaved) {
         localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: false }))
         dispatch(updateGPOSavedState(false))
