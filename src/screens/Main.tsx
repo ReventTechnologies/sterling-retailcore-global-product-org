@@ -297,7 +297,6 @@ export const Main = ({}: Props) => {
                         key={data?.product_category_id}
                       />
                     ))}
-                    {console.log('datytt', productData)}
                   </>
                 </div>
               </div>
@@ -327,7 +326,6 @@ export const Main = ({}: Props) => {
           isOpen={saveModalLoading}
           loading={saveGPOLoading}
           leftClick={() => {
-            console.log(window.location.host)
             window.location.replace(`/configuration/dashboard`)
           }}
           closeModal={closeSaveGPOModal}
