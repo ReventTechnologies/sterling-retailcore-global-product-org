@@ -2,16 +2,14 @@ import {
   GET_PRODUCT_CATEGORIES_FAILED,
   GET_PRODUCT_CATEGORIES_REQUEST,
   GET_PRODUCT_CATEGORIES_SUCCESS,
+  GET_PRODUCT_CATEGORIES_SUCCESSS,
   SAVE_PRODUCT_CATEGORIES_FAILED,
   SAVE_PRODUCT_CATEGORIES_REQUEST,
   SAVE_PRODUCT_CATEGORIES_SUCCESS,
-  UPDATE_GPO_SAVED_STATE
+  UPDATE_GPO_SAVED_STATE,
 } from 'Redux/constants/ProductCategories'
 
-import {
-  setProductCategoriesActionTypes,
-} from 'Redux/actions/ProductCategories'
-
+import { setProductCategoriesActionTypes } from 'Redux/actions/ProductCategories'
 
 const ProductCategoriesInitialState = {
   productCategories: [],
@@ -19,16 +17,17 @@ const ProductCategoriesInitialState = {
   loading: false,
   success: true,
   error: false,
+  categoryData: [],
 }
 
 export interface ProductCategoriesTypes {
-  productCategories: any[],
-  message: string,
-  loading: boolean,
-  success: boolean,
-  error: boolean,
+  productCategories: any[]
+  message: string
+  loading: boolean
+  success: boolean
+  error: boolean
+  categoryData: any[]
 }
-
 
 const SaveGPOInitialState = {
   message: '',
@@ -39,13 +38,12 @@ const SaveGPOInitialState = {
 }
 
 export interface SaveGPOTypes {
-  message: string,
-  loading: boolean,
-  success: boolean,
-  error: boolean,
+  message: string
+  loading: boolean
+  success: boolean
+  error: boolean
   saved: boolean
 }
-
 
 export const ProductCategoriesReducer = (state: ProductCategoriesTypes = ProductCategoriesInitialState, action: setProductCategoriesActionTypes) => {
   switch (action.type) {
@@ -53,13 +51,14 @@ export const ProductCategoriesReducer = (state: ProductCategoriesTypes = Product
       return { ...state, loading: true, success: false }
     case GET_PRODUCT_CATEGORIES_SUCCESS:
       return { ...state, loading: false, success: true, productCategories: action.payload }
+    case GET_PRODUCT_CATEGORIES_SUCCESSS:
+      return { ...state, loading: false, success: true, categoryData: action.payload }
     case GET_PRODUCT_CATEGORIES_FAILED:
       return { ...state, loading: false, success: false, error: true, message: action.payload }
     default:
       return state
   }
 }
-
 
 export const SaveGPOReducer = (state: SaveGPOTypes = SaveGPOInitialState, action: setProductCategoriesActionTypes) => {
   switch (action.type) {

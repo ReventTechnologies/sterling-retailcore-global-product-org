@@ -25,7 +25,7 @@ export const ProductType = ({
   const editButtonId = uuidv4({ namespace: 'EditButton' })
 
   const [allowEdit, setAllowEdit] = useState<boolean>(false)
-  const [name, setName] = useState<string>(product.name)
+  const [name, setName] = useState<string>(product.product_type)
   const drag = useCallback((ev: any, product: any) => {
     // set the behaviour config for the event
     ev.dataTransfer.setData("productId", product.product_type_id);
@@ -62,7 +62,7 @@ export const ProductType = ({
     <div
       draggable
       onDragStart={(e) => drag(e, product)}
-      id={product.id}
+      id={product.product_type_id}
       className={`flex justify-center shadow-md items-center w-full h-[2.125rem] px-5 gap-x-5 rounded-[0.3125rem] mb-2 bg-white border border-[#AAAAAA] font-normal`}
     >
       <img src={dots} />
@@ -79,7 +79,7 @@ export const ProductType = ({
           />
         </span>
           :
-          <span className={`grow text-[.875rem]`}>{product.name}</span>
+          <span className={`grow text-[.875rem]`}>{product.product_type}</span>
       }
       {
         currentEditId === product?.product_type_id ?
