@@ -24,7 +24,7 @@ const breadCrumbsList = [
 ]
 interface CategoryType {
   product_category_id: string
-  types: { product_type_id: string }[]
+  product_type_id: string[]
 }
 
 interface Props {}
@@ -97,19 +97,22 @@ export const Main = ({}: Props) => {
 
     dataToSave.productTypes.forEach((obj) => {
       const { data, product_type_id } = obj
-
-      if (categoryTypeMap.hasOwnProperty(data.product_category_id)) {
-        categoryTypeMap['product_category_id'].types.push({ product_type_id })
+      const { product_category_id } = data
+      if (categoryTypeMap.hasOwnProperty(product_category_id)) {
+        categoryTypeMap[product_category_id].product_type_id.push(product_type_id)
       } else {
-        categoryTypeMap['product_category_id'] = { product_category_id: data.product_category_id, types: [{ product_type_id }] }
+        categoryTypeMap[product_category_id] = { product_category_id, product_type_id: [product_type_id] }
       }
     })
 
     const newArray: CategoryType[] = Object.values(categoryTypeMap)
-    console.log({newArray})
+    const newDataToSave = {
+      data: newArray,
+    }
 
     setSaveModalLoading(true)
-    dispatch(saveGPO(dataToSave))
+    dispatch(saveGPO(newDataToSave))
+    setDataToSave(() => dataTosaveInitialState)
     // setDragOver(true)
   }, [dataToSave, saveModalLoading])
 

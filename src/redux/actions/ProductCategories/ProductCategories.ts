@@ -1,10 +1,3 @@
-// export const baseUrl = "https://product-management-api-dev.reventtechnologies.com"
-const ReventBaseUrl = process.env.REVENT_BASE_URL
-// const PrunedgeAccountingUrl = process.env.PRUNEDGE_ACCOUNTING_URL
-const ENVIRONMENT = process.env.ENVIRONMENT
-// /v1/product-category/
-
-// import axios from 'axios'
 import axios from 'axios'
 import { Dispatch } from 'redux'
 import {
@@ -14,7 +7,7 @@ import {
   SAVE_PRODUCT_CATEGORIES_FAILED,
   SAVE_PRODUCT_CATEGORIES_REQUEST,
   SAVE_PRODUCT_CATEGORIES_SUCCESS,
-  UPDATE_GPO_SAVED_STATE
+  UPDATE_GPO_SAVED_STATE,
 } from 'Redux/constants/ProductCategories'
 
 interface ActionTypes {
@@ -27,6 +20,18 @@ interface ActionTypes {
   UPDATE_GPO_SAVED_STATE: any
 }
 
+const ReventBaseUrl = process.env.REVENT_BASE_URL
+
+const ENVIRONMENT = process.env.ENVIRONMENT
+const token = localStorage.getItem('@sterling_core_token')
+const config = {
+  headers: {
+    // 'Content-Type': 'application/json',
+    // Authorization: `Bearer ${token}`,
+    environment: ENVIRONMENT,
+  },
+}
+
 interface MessageAction {
   type: keyof ActionTypes
   payload: any
@@ -36,7 +41,7 @@ export type setProductCategoriesActionTypes = MessageAction
 export const updateGPOSavedState = (state: boolean) => {
   return {
     type: UPDATE_GPO_SAVED_STATE,
-    payload: state
+    payload: state,
   }
 }
 export const getProductCategories = () => async (dispatch: Dispatch) => {
@@ -45,23 +50,14 @@ export const getProductCategories = () => async (dispatch: Dispatch) => {
       type: GET_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        environment: ENVIRONMENT,
-      },
-    }
     const { data } = await axios.get(`${ReventBaseUrl}/product-category/all/association`, config)
-    console.log(data)
+
     if (data.status === 'success') {
       dispatch({
         type: GET_PRODUCT_CATEGORIES_SUCCESS,
-        payload: data?.data
+        payload: data?.data,
       })
     }
-
   } catch (error) {
     dispatch({
       type: GET_PRODUCT_CATEGORIES_FAILED,
@@ -76,21 +72,12 @@ export const saveGPO = (gpoData) => async (dispatch: Dispatch) => {
       type: SAVE_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-        environment: ENVIRONMENT,
-      },
-    }
-
-    const { data } = await axios.patch(`${ReventBaseUrl}/global-product-organization/product-types`, gpoData, config)
+    const { data } = await axios.patch(`${ReventBaseUrl}/product-category/save`, gpoData, config)
     //  console.log(data)
     if (data?.status === 'success') {
       dispatch({
         type: SAVE_PRODUCT_CATEGORIES_SUCCESS,
-        payload: "Configuration Sent for Approval"
+        payload: 'Configuration Sent for Approval',
       })
 
       // dispatch(updateGPOSavedState(true))
