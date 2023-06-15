@@ -327,7 +327,8 @@ export const Main = ({}: Props) => {
           isOpen={saveModalLoading}
           loading={saveGPOLoading}
           leftClick={() => {
-            window.location.replace(`${window.location.host}`)
+            console.log(window.location.host)
+            window.location.replace(`/configuration/dashboard`)
           }}
           closeModal={closeSaveGPOModal}
           status={saveGPOSuccess ? `success` : saveGPOError ? 'error' : 'warning'}
