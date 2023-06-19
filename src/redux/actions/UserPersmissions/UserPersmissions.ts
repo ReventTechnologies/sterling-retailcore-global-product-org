@@ -70,7 +70,7 @@ export const getUserProfile = () => async (dispatch: Dispatch) => {
         Authorization: `Bearer ${token}`
       }
     }
-    const { data } = await axios.get(`${PrunedgeAuthURL}/users/profile`, config)
+    const { data } = await axios.get(`${PrunedgeAuthURL}/users/profile/`, config)
     //  console.log(data)
     if (data?.success) {
       dispatch({
