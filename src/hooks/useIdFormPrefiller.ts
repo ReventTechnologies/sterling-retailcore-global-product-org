@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 
-const SERVER_URL = 'https://customer-management-api-dev.reventtechnologies.com'
+const SERVER_URL = process.env.CUSTOMER_MANAGEMENT_URL
 
 export enum PrefillerIDTypeLengths {
   BVN = 12,
@@ -50,10 +50,10 @@ export const useIdFormPrefiller = () => {
       const url = (id: string, number: string | number) => {
         switch (id) {
           case 'Customer ID':
-            return `${SERVER_URL}/v1/customer-signatory/${number}`
+            return `${SERVER_URL}/customer-signatory/${number}`
 
           default:
-            return `${SERVER_URL}/v1/customer/id/?field=${id}&id=${number}`
+            return `${SERVER_URL}/customer/id/?field=${id}&id=${number}`
         }
       }
 
