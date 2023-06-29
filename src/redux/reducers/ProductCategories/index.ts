@@ -3,4 +3,6 @@ export {
   type ProductCategoriesTypes,
   ProductCategoriesReducer,
   SaveGPOReducer,
+  SaveProductTypeNameReducer,
+  type SaveProductTypeNameType,
 } from './ProductCategories'

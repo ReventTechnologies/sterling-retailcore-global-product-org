@@ -45,9 +45,8 @@ const configureInterceptor = () => {
           const response = await axios.post(`${PRUNEDGE_AUTH_URL}/auth/token/refresh/`, {
             refresh: refreshToken,
           })
-          console.log('response', { response })
           // Save the new access token to local storage
-          localStorage.setItem('@sterling_core_token', response?.data?.data.access)
+          localStorage.setItem('@sterling_core_token', response?.data?.access)
 
           // Update the authorization header for the original request with the new access token
           originalRequest.headers.Authorization = `Bearer ${response.data.access}`

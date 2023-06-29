@@ -45,7 +45,7 @@ console.log('datytt',{data})
               updateProductTypeName={updateProductTypeName}
               index={index}
               productIndex={productIndex}
-            />
+            /> 
           ))
         }
 
