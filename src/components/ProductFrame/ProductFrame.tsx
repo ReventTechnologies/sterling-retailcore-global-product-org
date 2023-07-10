@@ -8,10 +8,9 @@ interface Props {
   setCurrentEditId: (ev: any) => void
   drop: (ev: any, passedId?: string) => void
   allowDrop: (ev: any, index: number) => void
-  updateProductTypeName: (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => void
 }
 
-export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeave, allowDrop, setCurrentEditId, updateProductTypeName }: Props) => {
+export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeave, allowDrop, setCurrentEditId }: Props) => {
   return (
     <div
       id={data.id}
@@ -30,7 +29,6 @@ export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeav
               setCurrentEditId={setCurrentEditId}
               key={product?.product_type_id}
               product={product}
-              updateProductTypeName={updateProductTypeName}
               index={index}
               productIndex={productIndex}
             />

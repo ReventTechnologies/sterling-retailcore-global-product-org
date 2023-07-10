@@ -3,7 +3,6 @@ import { EditIcon } from 'Assets/svgs/EditIcon'
 import { saveProductTypeName } from 'Redux/actions/ProductCategories'
 import { ChangeEvent, KeyboardEvent, useCallback, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { v4 as uuidv4 } from 'uuid'
 
 interface Props {
   product: any
@@ -11,15 +10,11 @@ interface Props {
   currentEditId: string
   productIndex: number
   setCurrentEditId: (ev: any) => void
-  updateProductTypeName: (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => void
 }
-export const ProductType = ({ product, index, currentEditId, productIndex, setCurrentEditId, updateProductTypeName }: Props) => {
+export const ProductType = ({ product, index, currentEditId, productIndex, setCurrentEditId }: Props) => {
   const saveButtonRef = useRef<HTMLElement>(null)
-  const editButtonRef = useRef<HTMLElement>(null)
-  const editButtonId = uuidv4({ namespace: 'EditButton' })
   const dispatch: any = useDispatch()
 
-  const [allowEdit, setAllowEdit] = useState<boolean>(false)
   const [name, setName] = useState<string>(product.product_type)
   const drag = useCallback((ev: any, product: any) => {
     // set the behaviour config for the event
@@ -35,13 +30,12 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
 
   const onkeyup = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
     if (ev.key === 'Enter') {
-      // onNameChange(ev)
       onSaveChange(ev?.currentTarget?.value, ev?.key)
     }
   }, [])
 
   const onblur = useCallback((e) => {
-    if (!saveButtonRef.current || !saveButtonRef.current.id || !(saveButtonRef.current.id === (e.target as Element).id)) {
+    if (!saveButtonRef.current.id || saveButtonRef.current.id !== (e.target as Element).id) {
       setCurrentEditId(null)
     }
   }, [])
@@ -55,7 +49,7 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
       }
       setCurrentEditId(null)
     },
-    [name, allowEdit, index, productIndex, product]
+    [name, index, productIndex, product]
   )
 
   return (
