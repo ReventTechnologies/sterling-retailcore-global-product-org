@@ -27,11 +27,8 @@ interface CategoryType {
   productTypeId: string
 }
 
-interface Props {}
-
-export const Main = ({}: Props) => {
+export const Main = () => {
   const dispatch: any = useDispatch()
-
   const {
     error: productCategoriesError,
     success: productCategoriesSuccess,
@@ -53,17 +50,7 @@ export const Main = ({}: Props) => {
     success: saveGPOSuccess,
     saved: saveGPOSaved,
   } = useSelector<ReducersType>((state) => state.saveGPO) as SaveGPOTypes
-  // {
-  // "product_type_id": "aa882402-c335-4043-9274-710583fca759",
-  // "data": {
-  //   "name": "Stocks",
-  //   "product_category_id": "56137bab-fecc-423b-abf8-0b8a32d93621",
-  //   "product_category": "Investment",
-  //   "description": "changed stocks category",
-  //   "recently_updated_column": "product_category"
-  // }
-  // }
-  // "last_modified_by_id": userProfileData?.id,
+
   const dataTosaveInitialState = {
     productTypes: [],
   }
@@ -74,7 +61,7 @@ export const Main = ({}: Props) => {
   const [saveModalLoading, setSaveModalLoading] = useState(false)
   const [currentEditId, setCurrentEditId] = useState(null)
 
-  const Disabled = (): boolean => {
+  const disabled = (): boolean => {
     return !!currentEditId || !isEdited
   }
 
@@ -82,7 +69,6 @@ export const Main = ({}: Props) => {
     (ev: any, index: number) => {
       ev.preventDefault()
       setProductDataIndex(index)
-      // setDragOver(true)
     },
     [productDataIndex]
   )
@@ -108,18 +94,15 @@ export const Main = ({}: Props) => {
     setSaveModalLoading(true)
     dispatch(saveGPO(newDataToSave))
     setDataToSave(() => dataTosaveInitialState)
-    // setDragOver(true)
   }, [dataToSave, saveModalLoading])
 
   const dragLeave = useCallback((ev: any) => {
     ev.preventDefault()
-    // setDragOver(false)
   }, [])
 
   const onDiscardChanges = useCallback(() => {
     const resetData = JSON.parse(localStorage.getItem('productCategoriesBackup'))
     setProductData(() => [...resetData])
-    // setDragOver(false)
     localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: false }))
   }, [productData, productCategoriesData])
 
@@ -192,58 +175,11 @@ export const Main = ({}: Props) => {
     [productData, productDataIndex, dataToSave]
   )
 
-  const updateProductTypeName = useCallback(
-    (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => {
-      const tempProductData = productData
-      const targetProductData = productData[productDataIndex]
-      // const tempSourceProductData = targetProductData.find((data) => {
-      const targetProductType = targetProductData.product_types.find((product) => {
-        if (productTypeId === product.product_type_id) {
-          return product
-        }
-      })
-      targetProductType.name = productTypeName
-      targetProductData.product_types.splice(productTypeIndex, 1, targetProductType)
-      tempProductData.splice(productDataIndex, 1, targetProductData)
-
-      const dataToSaveCopy = dataToSave
-      const foundProductTypeIndex = dataToSaveCopy.productTypes.findIndex((productType) => productType.product_type_id === productTypeId)
-      if (foundProductTypeIndex > -1) {
-        const productTypeCopy = dataToSaveCopy.productTypes[foundProductTypeIndex]
-        // productTypeCopy.product_type_id = productTypeId
-        productTypeCopy.data.name = productTypeName
-        productTypeCopy.data.product_category_id = targetProductData.product_category_id
-        productTypeCopy.data.product_category = targetProductData.product_category
-        productTypeCopy.data.description = targetProductData.description
-        productTypeCopy.data.recently_updated_column = 'name'
-
-        dataToSaveCopy.productTypes.splice(foundProductTypeIndex, 1, productTypeCopy)
-      } else {
-        dataToSaveCopy.productTypes.push({
-          product_type_id: productTypeId,
-          data: {
-            name: productTypeName,
-            product_category_id: targetProductData.product_category_id,
-            product_category: targetProductData.product_category,
-            description: targetProductData.description,
-            recently_updated_column: 'name',
-          },
-        })
-      }
-      setDataToSave(() => ({ ...dataToSaveCopy }))
-      setProductData(() => [...tempProductData])
-      setCurrentEditId(null)
-      localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: true }))
-    },
-    [productData, dataToSave]
-  )
-
   useEffect(() => {
     if (!productData.length || saveGPOSaved) {
       dispatch(getProductCategories())
       dispatch(getProductAllCategories())
       if (saveGPOSaved) {
-        localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: false }))
         dispatch(updateGPOSavedState(false))
       }
     } else {
@@ -291,7 +227,6 @@ export const Main = ({}: Props) => {
                         dragLeave={dragLeave}
                         drop={drop}
                         productIndex={index}
-                        updateProductTypeName={updateProductTypeName}
                         currentEditId={currentEditId}
                         setCurrentEditId={setCurrentEditId}
                         key={data?.product_category_id}
@@ -305,14 +240,14 @@ export const Main = ({}: Props) => {
                 <Button
                   className={`bg-transparent border border-[#AAAAAA] text-[#636363_!important] w-fit disabled:text-white`}
                   onClick={onDiscardChanges}
-                  disabled={Disabled()} // disabled={false}
+                  disabled={disabled()} // disabled={false}
                 >
                   <span className={`hover:text-white`}>Discard Changes</span>
                 </Button>
                 <Button
                   className={`bg-primay-main text-[white_!important] `}
                   onClick={onSaveGPO}
-                  disabled={Disabled()} // disabled={false}
+                  disabled={disabled()} // disabled={false}
                 >
                   Save
                 </Button>

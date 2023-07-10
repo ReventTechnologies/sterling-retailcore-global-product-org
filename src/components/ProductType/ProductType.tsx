@@ -1,8 +1,8 @@
-import { useCallback, useState, ChangeEvent, KeyboardEvent, useRef, useEffect } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import { dots } from 'Assets/svgs'
 import { EditIcon } from 'Assets/svgs/EditIcon'
-
+import { saveProductTypeName } from 'Redux/actions/ProductCategories'
+import { ChangeEvent, KeyboardEvent, useCallback, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 interface Props {
   product: any
@@ -10,53 +10,47 @@ interface Props {
   currentEditId: string
   productIndex: number
   setCurrentEditId: (ev: any) => void
-  updateProductTypeName: (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => void
 }
-export const ProductType = ({
-  product,
-  index,
-  currentEditId,
-  productIndex,
-  setCurrentEditId,
-  updateProductTypeName,
-}: Props) => {
+export const ProductType = ({ product, index, currentEditId, productIndex, setCurrentEditId }: Props) => {
   const saveButtonRef = useRef<HTMLElement>(null)
-  const editButtonRef = useRef<HTMLElement>(null)
-  const editButtonId = uuidv4({ namespace: 'EditButton' })
+  const dispatch: any = useDispatch()
 
-  const [allowEdit, setAllowEdit] = useState<boolean>(false)
   const [name, setName] = useState<string>(product.product_type)
   const drag = useCallback((ev: any, product: any) => {
     // set the behaviour config for the event
-    ev.dataTransfer.setData("productId", product.product_type_id);
+    ev.dataTransfer.setData('productId', product.product_type_id)
   }, [])
 
-  const onNameChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
-    setName(ev.target.value)
-  }, [name])
+  const onNameChange = useCallback(
+    (ev: ChangeEvent<HTMLInputElement>) => {
+      setName(ev.target.value)
+    },
+    [name]
+  )
 
   const onkeyup = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
     if (ev.key === 'Enter') {
-      // onNameChange(ev)
       onSaveChange(ev?.currentTarget?.value, ev?.key)
     }
   }, [])
 
   const onblur = useCallback((e) => {
-    if (!saveButtonRef.current || !saveButtonRef.current.id || !(saveButtonRef.current.id === (e.target as Element).id)) {
+    if (!saveButtonRef.current.id || saveButtonRef.current.id !== (e.target as Element).id) {
       setCurrentEditId(null)
     }
   }, [])
 
-  const onSaveChange = useCallback((value?: string, key?: string) => {
-    if (key === "Enter") {
-      updateProductTypeName(productIndex, product.product_type_id, index, value)
-    } else {
-      updateProductTypeName(productIndex, product.product_type_id, index, name)
-    }
-    // console.log(name)
-    // setAllowEdit(false)
-  }, [name, allowEdit, index, productIndex, product])
+  const onSaveChange = useCallback(
+    (value?: string, key?: string) => {
+      if (key === 'Enter') {
+        dispatch(saveProductTypeName(product?.product_type_id, value))
+      } else {
+        dispatch(saveProductTypeName(product?.product_type_id, name))
+      }
+      setCurrentEditId(null)
+    },
+    [name, index, productIndex, product]
+  )
 
   return (
     <div
@@ -66,11 +60,10 @@ export const ProductType = ({
       className={`flex justify-center shadow-md items-center w-full h-[2.125rem] px-5 gap-x-5 rounded-[0.3125rem] mb-2 bg-white border border-[#AAAAAA] font-normal`}
     >
       <img src={dots} />
-      {
-        currentEditId === product?.product_type_id ? <span className={`grow`}>
-
+      {currentEditId === product?.product_type_id ? (
+        <span className={`grow`}>
           <input
-            type="text"
+            type='text'
             className={`w-full border rounded-md text-[.875rem]`}
             value={name}
             onChange={onNameChange}
@@ -78,21 +71,25 @@ export const ProductType = ({
             onBlur={onblur}
           />
         </span>
-          :
-          <span className={`grow text-[.875rem]`}>{product.product_type}</span>
-      }
-      {
-        currentEditId === product?.product_type_id ?
-          <button
-            ref={(ref) => {
-              saveButtonRef.current = ref
-            }}
-            id={product?.product_type_id}
-            className={`text-[.75rem] h-full m-0 z-50`} onClick={() => onSaveChange()}>Save</button>
-          :
-          <button
-            onClick={() => setCurrentEditId(product?.product_type_id)}><EditIcon /></button>
-      }
+      ) : (
+        <span className={`grow text-[.875rem]`}>{name === product.product_type ? product.product_type : name}</span>
+      )}
+      {currentEditId === product?.product_type_id ? (
+        <button
+          ref={(ref) => {
+            saveButtonRef.current = ref
+          }}
+          id={product?.product_type_id}
+          className={`text-[.75rem] h-full m-0 z-50`}
+          onClick={() => onSaveChange()}
+        >
+          Save
+        </button>
+      ) : (
+        <button onClick={() => setCurrentEditId(() => product?.product_type_id)}>
+          <EditIcon />
+        </button>
+      )}
     </div>
   )
 }
