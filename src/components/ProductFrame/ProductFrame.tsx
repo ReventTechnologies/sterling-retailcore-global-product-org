@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { ProductType } from 'Components/ProductType'
 
 interface Props {
@@ -12,22 +11,10 @@ interface Props {
   updateProductTypeName: (productDataIndex: number, productTypeId: string, productTypeIndex: number, productTypeName: string) => void
 }
 
-export const ProductFrame = ({
-  data,
-  currentEditId,
-  productIndex,
-  drop,
-  dragLeave,
-  allowDrop,
-  setCurrentEditId,
-  updateProductTypeName
-}: Props) => {
-
-console.log('datytt',{data})
-
-
+export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeave, allowDrop, setCurrentEditId, updateProductTypeName }: Props) => {
   return (
-    <div id={data.id}
+    <div
+      id={data.id}
       onDragLeave={(e) => dragLeave(e)}
       onDragOver={(e) => allowDrop(e, productIndex)}
       onDrop={(e) => drop(e)}
@@ -35,7 +22,8 @@ console.log('datytt',{data})
     >
       <div className={`text-[1rem] leading-[1.1875rem] uppercase`}>{data?.product_category}</div>
       <div className={`grow border border-[#AAAAAA] w-full rounded-[0.5rem] p-5`}>
-        {data.product_types&&data.product_types?.length>0&&
+        {data.product_types &&
+          data.product_types?.length > 0 &&
           data.product_types.map((product, index) => (
             <ProductType
               currentEditId={currentEditId}
@@ -46,9 +34,7 @@ console.log('datytt',{data})
               index={index}
               productIndex={productIndex}
             />
-          ))
-        }
-
+          ))}
       </div>
     </div>
   )

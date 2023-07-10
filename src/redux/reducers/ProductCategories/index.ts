@@ -1,6 +1,6 @@
 export {
-  type SaveGPOTypes,
-  type ProductCategoriesTypes,
   ProductCategoriesReducer,
   SaveGPOReducer,
-} from './ProductCategories'
+  SaveProductTypeNameReducer, type ProductCategoriesTypes, type SaveGPOTypes, type SaveProductTypeNameType
+} from './ProductCategories';
+

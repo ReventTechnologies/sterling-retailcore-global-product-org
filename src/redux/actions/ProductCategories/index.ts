@@ -1,5 +1,2 @@
-export {
-  type setProductCategoriesActionTypes,
-  getProductCategories,
-  saveGPO
-} from "./ProductCategories"
+export { getProductCategories, saveGPO, saveProductTypeName, type setProductCategoriesActionTypes } from './ProductCategories';
+
