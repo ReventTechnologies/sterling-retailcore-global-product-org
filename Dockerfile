@@ -14,7 +14,7 @@ RUN npx tailwindcss -i ./src/styles/start.css -o ./src/styles/final.css
 RUN npm run build:dev
 
 # Stage 2 - Serve the application using Nginx
-FROM nginx:latest
+FROM nginx:1.21-alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
