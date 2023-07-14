@@ -1,8 +1,11 @@
 import { dots } from 'Assets/svgs'
 import { EditIcon } from 'Assets/svgs/EditIcon'
+import { InlineLoader } from 'Components/Loader/Loader'
 import { saveProductTypeName } from 'Redux/actions/ProductCategories'
-import { ChangeEvent, KeyboardEvent, useCallback, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { SaveProductTypeNameType } from 'Redux/reducers/ProductCategories'
+import { ReducersType } from 'Redux/store'
+import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 interface Props {
   product: any
@@ -14,8 +17,14 @@ interface Props {
 export const ProductType = ({ product, index, currentEditId, productIndex, setCurrentEditId }: Props) => {
   const saveButtonRef = useRef<HTMLElement>(null)
   const dispatch: any = useDispatch()
-
-  const [name, setName] = useState<string>(product.product_type)
+  const {
+    error: saveProductTypeNameError,
+    loading: saveProductTypeNameLoading,
+    message: saveProductTypeNameMessage,
+    success: saveProductTypeNameSuccess,
+    saved: saveProductTypeNameSaved,
+  } = useSelector<ReducersType>((state) => state.SaveProductTypeName) as SaveProductTypeNameType
+  const [name, setName] = useState<string>(product.name)
   const drag = useCallback((ev: any, product: any) => {
     // set the behaviour config for the event
     ev.dataTransfer.setData('productId', product.product_type_id)
@@ -47,10 +56,16 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
       } else {
         dispatch(saveProductTypeName(product?.product_type_id, name))
       }
-      setCurrentEditId(null)
+      // setCurrentEditId(null)
     },
     [name, index, productIndex, product]
   )
+
+  useEffect(() => {
+    if (saveProductTypeNameSuccess) {
+      setCurrentEditId(null)
+    }
+  }, [saveProductTypeNameSuccess])
 
   return (
     <div
@@ -72,23 +87,29 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
           />
         </span>
       ) : (
-        <span className={`grow text-[.875rem]`}>{name === product.product_type ? product.product_type : name}</span>
+        <span className={`grow text-[.875rem]`}>{name === product.name ? product.name : name}</span>
       )}
-      {currentEditId === product?.product_type_id ? (
-        <button
-          ref={(ref) => {
-            saveButtonRef.current = ref
-          }}
-          id={product?.product_type_id}
-          className={`text-[.75rem] h-full m-0 z-50`}
-          onClick={() => onSaveChange()}
-        >
-          Save
-        </button>
+      {currentEditId === product?.product_type_id && saveProductTypeNameLoading ? (
+        <InlineLoader />
       ) : (
-        <button onClick={() => setCurrentEditId(() => product?.product_type_id)}>
-          <EditIcon />
-        </button>
+        <>
+          {currentEditId === product?.product_type_id ? (
+            <button
+              ref={(ref) => {
+                saveButtonRef.current = ref
+              }}
+              id={product?.product_type_id}
+              className={`text-[.75rem] h-full m-0 z-50`}
+              onClick={() => onSaveChange()}
+            >
+              Save
+            </button>
+          ) : (
+            <button onClick={() => setCurrentEditId(() => product?.product_type_id)}>
+              <EditIcon />
+            </button>
+          )}
+        </>
       )}
     </div>
   )
