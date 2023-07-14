@@ -62,7 +62,7 @@ export const Main = () => {
   const [currentEditId, setCurrentEditId] = useState(null)
 
   const disabled = (): boolean => {
-    return !!currentEditId || !isEdited
+    return !!currentEditId
   }
 
   const allowDrop = useCallback(
@@ -101,9 +101,8 @@ export const Main = () => {
   }, [])
 
   const onDiscardChanges = useCallback(() => {
-    const resetData = JSON.parse(localStorage.getItem('productCategoriesBackup'))
-    setProductData(() => [...resetData])
-    localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: false }))
+    dispatch(getProductCategories())
+    dispatch(getProductAllCategories())
   }, [productData, productCategoriesData])
 
   // Open And Close Modals
@@ -170,7 +169,6 @@ export const Main = () => {
       }
       setDataToSave(() => ({ ...dataToSaveCopy }))
       setProductData(() => [...tempProductData])
-      localStorage.setItem('productCategoryProccess', JSON.stringify({ edited: true }))
     },
     [productData, productDataIndex, dataToSave]
   )
@@ -182,17 +180,11 @@ export const Main = () => {
       if (saveGPOSaved) {
         dispatch(updateGPOSavedState(false))
       }
-    } else {
-      const productCategoriesProccess = localStorage.getItem('productCategoryProccess')
-        ? JSON.parse(localStorage.getItem('productCategoryProccess'))
-        : { edited: false }
-      setIsEdited(productCategoriesProccess.edited)
     }
   }, [productData, saveGPOSaved])
 
   useEffect(() => {
     const newData = productCategoriesData.map((data) => ({ ...data }))
-    localStorage.setItem('productCategoriesBackup', JSON.stringify(newData))
     setProductData(() => [...newData])
   }, [productCategoriesData])
 
