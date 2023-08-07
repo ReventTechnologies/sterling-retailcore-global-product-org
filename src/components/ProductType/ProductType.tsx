@@ -1,11 +1,7 @@
 import { dots } from 'Assets/svgs'
 import { EditIcon } from 'Assets/svgs/EditIcon'
 import { InlineLoader } from 'Components/Loader/Loader'
-import { saveProductTypeName } from 'Redux/actions/ProductCategories'
-import { SaveProductTypeNameType } from 'Redux/reducers/ProductCategories'
-import { ReducersType } from 'Redux/store'
-import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import useProductType from './useProductType.hook'
 
 interface Props {
   product: any
@@ -15,54 +11,14 @@ interface Props {
   setCurrentEditId: (ev: any) => void
 }
 export const ProductType = ({ product, index, currentEditId, productIndex, setCurrentEditId }: Props) => {
-  const saveButtonRef = useRef<HTMLElement>(null)
-  const dispatch: any = useDispatch()
-  const {
-    loading: saveProductTypeNameLoading,
-    success: saveProductTypeNameSuccess,
-  } = useSelector<ReducersType>((state) => state.SaveProductTypeName) as SaveProductTypeNameType
-  const [name, setName] = useState<string>(product.name)
-  const drag = useCallback((ev: any, product: any) => {
-    // set the behaviour config for the event
-    ev.dataTransfer.setData('productId', product.product_type_id)
-  }, [])
-
-  const onNameChange = useCallback(
-    (ev: ChangeEvent<HTMLInputElement>) => {
-      setName(ev.target.value)
-    },
-    [name]
+  const { drag, name, onNameChange, onblur, onkeyup, saveProductTypeNameLoading, saveButtonRef, onSaveChange } = useProductType(
+    product,
+    index,
+    productIndex,
+    setCurrentEditId
   )
 
-  const onkeyup = useCallback((ev: KeyboardEvent<HTMLInputElement>) => {
-    if (ev.key === 'Enter') {
-      onSaveChange(ev?.currentTarget?.value, ev?.key)
-    }
-  }, [])
-
-  const onblur = useCallback((e) => {
-    if (!saveButtonRef.current.id || saveButtonRef.current.id !== (e.target as Element).id) {
-      setCurrentEditId(null)
-    }
-  }, [])
-
-  const onSaveChange = useCallback(
-    (value?: string, key?: string) => {
-      if (key === 'Enter') {
-        dispatch(saveProductTypeName(product?.product_type_id, value))
-      } else {
-        dispatch(saveProductTypeName(product?.product_type_id, name))
-      }
-      // setCurrentEditId(null)
-    },
-    [name, index, productIndex, product]
-  )
-
-  useEffect(() => {
-    if (saveProductTypeNameSuccess) {
-      setCurrentEditId(null)
-    }
-  }, [saveProductTypeNameSuccess])
+  console.log({currentEditId})
 
   return (
     <div
@@ -102,7 +58,7 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
               Save
             </button>
           ) : (
-            <button onClick={() => setCurrentEditId(() => product?.product_type_id)}>
+            <button data-testid={`edit-button${index}`} onClick={() => setCurrentEditId(() => product?.product_type_id)}>
               <EditIcon />
             </button>
           )}
