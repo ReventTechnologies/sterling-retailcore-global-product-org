@@ -23,11 +23,13 @@
       "Config/*": [
         "src/config/*"
       ],
-      "Screens/*": [
-        "src/screens/*"
+      "Pages/*": [
+        "src/pages/*"
       ],
       "Routes/*": [
         "src/routes/*"
+      ],"Types/*": [
+        "src/types/*"
       ]
     },
     "rootDirs": [

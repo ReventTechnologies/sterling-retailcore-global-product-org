@@ -1,8 +1,8 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { times } from '../../assets/svgs'
 
 type RemoveButtonProps = {
-  showRemoveButton: Boolean
+  showRemoveButton: boolean
   onClick: (item: any) => any
 }
 const RemoveButton = memo(({ showRemoveButton, onClick }: RemoveButtonProps) => {

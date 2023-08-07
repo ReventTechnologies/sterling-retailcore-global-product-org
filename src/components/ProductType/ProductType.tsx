@@ -18,11 +18,8 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
   const saveButtonRef = useRef<HTMLElement>(null)
   const dispatch: any = useDispatch()
   const {
-    error: saveProductTypeNameError,
     loading: saveProductTypeNameLoading,
-    message: saveProductTypeNameMessage,
     success: saveProductTypeNameSuccess,
-    saved: saveProductTypeNameSaved,
   } = useSelector<ReducersType>((state) => state.SaveProductTypeName) as SaveProductTypeNameType
   const [name, setName] = useState<string>(product.name)
   const drag = useCallback((ev: any, product: any) => {

@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 
 type CheckboxType = {
   disabled?: boolean
