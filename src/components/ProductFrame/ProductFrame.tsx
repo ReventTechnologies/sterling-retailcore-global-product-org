@@ -1,6 +1,6 @@
 import { ProductType } from 'Components/ProductType'
 
-interface Props {
+export type ProductFrameProps = {
   data: any
   productIndex: number
   dragLeave: (ev: any) => void
@@ -10,7 +10,7 @@ interface Props {
   allowDrop: (ev: any, index: number) => void
 }
 
-export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeave, allowDrop, setCurrentEditId }: Props) => {
+export const ProductFrame = ({ data, currentEditId, productIndex, drop, dragLeave, allowDrop, setCurrentEditId }: ProductFrameProps) => {
   return (
     <div
       id={data.id}
