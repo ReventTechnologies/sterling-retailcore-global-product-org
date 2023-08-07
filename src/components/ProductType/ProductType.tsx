@@ -18,8 +18,6 @@ export const ProductType = ({ product, index, currentEditId, productIndex, setCu
     setCurrentEditId
   )
 
-  console.log({currentEditId})
-
   return (
     <div
       draggable

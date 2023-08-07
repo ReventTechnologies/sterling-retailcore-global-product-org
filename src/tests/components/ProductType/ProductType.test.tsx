@@ -5,7 +5,6 @@ import { ProductType } from '../../../components/ProductType/ProductType'
 // Mocking the useProductType hook to isolate the component
 
 const mockOnSaveChange = jest.fn()
-const mockSetCurrentEditId = jest.fn((id) => id)
 jest.mock('Components/ProductType/useProductType.hook', () => ({
   __esModule: true,
   default: () => ({
