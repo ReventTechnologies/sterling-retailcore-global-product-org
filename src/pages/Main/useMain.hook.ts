@@ -30,7 +30,6 @@ export default function useMain() {
     success: saveGPOSuccess,
     saved: saveGPOSaved,
   } = useSelector<ReducersType>((state) => state.saveGPO) as SaveGPOTypes
-console.log({productCategoriesData})
   const breadCrumbsList = [
     {
       text: 'CONFIGURATION ENGINE',
