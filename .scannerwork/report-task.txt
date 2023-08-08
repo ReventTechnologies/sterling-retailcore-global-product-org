@@ -2,5 +2,5 @@ projectKey=gpo
 serverUrl=http://localhost:9000
 serverVersion=10.1.0.73491
 dashboardUrl=http://localhost:9000/dashboard?id=gpo
-ceTaskId=AYnRrAxWNbBrLsyuPjk1
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYnRrAxWNbBrLsyuPjk1
+ceTaskId=AYnUZtKRH0nnG6bUD5LT
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYnUZtKRH0nnG6bUD5LT

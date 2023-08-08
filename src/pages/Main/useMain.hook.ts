@@ -7,7 +7,7 @@ import { CategoryType } from 'Types/CategoryType.type'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-export default function useGPO() {
+export default function useMain() {
   const dataTosaveInitialState = {
     productTypes: [],
   }
@@ -43,7 +43,7 @@ export default function useGPO() {
   ]
 
   useEffect(() => {
-    if (!productData.length || saveGPOSaved) {
+    if (!productData?.length || saveGPOSaved) {
       dispatch(getProductCategories())
       dispatch(getProductAllCategories())
       if (saveGPOSaved) {
@@ -53,8 +53,10 @@ export default function useGPO() {
   }, [productData, saveGPOSaved])
 
   useEffect(() => {
-    const newData = productCategoriesData.map((data) => ({ ...data }))
-    setProductData(() => [...newData])
+    if (productCategoriesData) {
+      const newData = productCategoriesData?.map((data) => ({ ...data }))
+      setProductData(() => [...newData])
+    }
   }, [productCategoriesData])
 
   const disabled = (): boolean => {
@@ -186,6 +188,7 @@ export default function useGPO() {
     saveGPOLoading,
     saveGPOSuccess,
     saveGPOError,
-    saveGPOMessage,userProfileData
+    saveGPOMessage,
+    userProfileData,
   }
 }

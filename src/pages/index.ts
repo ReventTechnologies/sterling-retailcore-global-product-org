@@ -1,2 +1,2 @@
 export { default as FOURZEROFOUR } from './FOURZEROFOUR'
-export { Main as MainScreen } from './Main/Main'
+export { default as Main } from './Main/Main'

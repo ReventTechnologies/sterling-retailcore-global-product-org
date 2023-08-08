@@ -3,7 +3,7 @@ import { Button } from 'Components/Button'
 import GoBack from 'Components/MainScreenLayout/GoBack'
 import { ProductFrame } from 'Components/ProductFrame'
 import AlertModal from 'Components/Shareables/AlertModal'
-import useGPO from './useGPO.hook'
+import useMain from './useMain.hook'
 
 export const Main = () => {
   const {
@@ -25,7 +25,7 @@ export const Main = () => {
     saveGPOError,
     saveGPOMessage,
     userProfileData,
-  } = useGPO()
+  } = useMain()
 
   return (
     <>
@@ -51,7 +51,7 @@ export const Main = () => {
                     <NavigationIcon />
                   </div>
                   <>
-                    {productData.map((data, index) => (
+                    {productData?.map((data, index) => (
                       <ProductFrame
                         data={data}
                         allowDrop={allowDrop}
@@ -109,3 +109,5 @@ export const Main = () => {
     </>
   )
 }
+
+export default Main

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { getRolesAndPermissions, getUserProfile } from 'Redux/actions/UserPersmissions'
 import configureInterceptor from 'Utilities/apiClient'
-import { MainScreen } from './pages'
+import { Main } from './pages'
 
 configureInterceptor()
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
     dispatch(getRolesAndPermissions())
   }, [])
 
-  return <MainScreen />
+  return <Main />
 }
 
 export default App
