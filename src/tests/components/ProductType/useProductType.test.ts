@@ -9,12 +9,9 @@ jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }))
 
-// Mock the dispatch function
-const mockDispatch = jest.fn()
-
-// Mock the useSelector function
-const mockUseSelector = useSelector as jest.MockedFunction<typeof useSelector>
-mockUseSelector.mockReturnValue({ loading: false, success: false })
+jest.mock('Redux/actions/ProductCategories', () => ({
+  saveProductTypeName: jest.fn(),
+}))
 
 describe('useProductType', () => {
   const product = { product_type_id: '1', name: 'Product 1' }
@@ -49,99 +46,98 @@ describe('useProductType', () => {
     expect(result.current.name).toBe('New Product Name')
   })
 
-  // it('should call dispatch with the correct parameters when onSaveChange is called with Enter key', () => {
-  //   // Arrange
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
-  //   const value = 'New Product Name'
-  //   const key = 'Enter'
+  it('should call dispatch with the correct parameters when onSaveChange is called with Enter key', () => {
+    // Arrange
+    const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
+    const value = 'New Product Name'
+    const key = 'Enter'
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onSaveChange(value, key)
-  //   })
+    // Act
+    act(() => {
+      result.current.onSaveChange(value, key)
+    })
 
-  //   // Assert
-  //   expect(saveProductTypeName).toHaveBeenCalledWith(product.product_type_id, value)
-  // })
+    // Assert
+    expect(mockDispatch).toHaveBeenCalled()
+    expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, value))
+  })
 
-  // it('should call dispatch with the correct parameters when onSaveChange is called without Enter key', () => {
-  //   // Arrange
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
+  it('should call dispatch with the correct parameters when onSaveChange is called without Enter key', () => {
+    // Arrange
+    const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onSaveChange()
-  //   })
+    // Act
+    act(() => {
+      result.current.onSaveChange()
+    })
 
-  //   // Assert
-  //   expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, product.name))
-  // })
+    // Assert
+    expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, product.name))
+  })
 
-  // it('should call setCurrentEditId when saveProductTypeNameSuccess is true', () => {
-  //   // Arrange
-  //   const setCurrentEditId = jest.fn()
-  //   mockUseSelector.mockReturnValue({ loading: false, success: true })
-  //   renderHook(() => useProductType(product, 0, 0, setCurrentEditId))
+  it('should call setCurrentEditId when saveProductTypeNameSuccess is true', () => {
+    // Arrange
+    const setCurrentEditId = jest.fn()
+    const mockUseSelector = useSelector as jest.Mock<any>
+    const SaveProductTypeNameData = {
+      data: null,
+      loading: false,
+      success: true,
+    }
 
-  //   // Assert
-  //   expect(setCurrentEditId).toHaveBeenCalledWith(null)
-  // })
+    mockUseSelector.mockImplementation((selectorFn) => {
+      // Check if the selector function is accessing the fetchTaxesReducer
+      if (selectorFn({ SaveProductTypeName: SaveProductTypeNameData }) === SaveProductTypeNameData) {
+        return SaveProductTypeNameData
+      }
 
-  // it('should not call dispatch when onSaveChange is called without Enter key and name has changed', () => {
-  //   // Arrange
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()));
+      return {} // Default return for other cases
+    })
+    renderHook(() => useProductType(product, 0, 0, setCurrentEditId))
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onNameChange({ target: { value: 'New Product Name' } } as any);
-  //     result.current.onSaveChange();
-  //   });
+    // Assert
+    expect(setCurrentEditId).toHaveBeenCalledWith(null)
+  })
 
-  //   // Assert
-  //   expect(mockDispatch).not.toHaveBeenCalled();
-  // });
+  it('should not call dispatch when onSaveChange is called without Enter key and name has changed', () => {
+    // Arrange
+    const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
 
-  // it('should call setCurrentEditId when onblur is called and the save button reference does not match', () => {
-  //   // Arrange
-  //   const setCurrentEditId = jest.fn();
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, setCurrentEditId));
+    // Act
+    act(() => {
+      result.current.onNameChange({ target: { value: 'New Product Name' } } as any)
+      result.current.onSaveChange()
+    })
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onblur({ target: document.createElement('div') });
-  //   });
+    // Assert
+    expect(mockDispatch).toHaveBeenCalled()
+    expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, 'New Product Name'))
+  })
 
-  //   // Assert
-  //   expect(setCurrentEditId).toHaveBeenCalledWith(null);
-  // });
+  it('should call setCurrentEditId when onblur is called and the save button reference does not match', () => {
+    // Arrange
+    const setCurrentEditId = jest.fn()
+    const { result } = renderHook(() => useProductType(product, 0, 0, setCurrentEditId))
 
-  // it('should not call setCurrentEditId when onblur is called and the save button reference matches', () => {
-  //   // Arrange
-  //   const setCurrentEditId = jest.fn();
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, setCurrentEditId));
-  //   const saveButtonRef = document.createElement('button');
-  //   saveButtonRef.id = 'saveButtonId';
-  //   result.current.saveButtonRef.current = saveButtonRef;
+    // Act
+    act(() => {
+      result.current.onblur({ target: document.createElement('div') })
+    })
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onblur({ target: saveButtonRef });
-  //   });
+    // Assert
+    expect(setCurrentEditId).toHaveBeenCalledWith(null)
+  })
 
-  //   // Assert
-  //   expect(setCurrentEditId).not.toHaveBeenCalled();
-  // });
+  it('should call onSaveChange when onkeyup is called with Enter key', () => {
+    // Arrange
+    const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()))
 
-  // it('should call onSaveChange when onkeyup is called with Enter key', () => {
-  //   // Arrange
-  //   const { result } = renderHook(() => useProductType(product, 0, 0, jest.fn()));
+    // Act
+    act(() => {
+      result.current.onkeyup({ key: 'Enter', currentTarget: { value: 'New Product Name' } } as any)
+    })
 
-  //   // Act
-  //   act(() => {
-  //     result.current.onkeyup({ key: 'Enter', currentTarget: { value: 'New Product Name' } } as any);
-  //   });
-
-  //   // Assert
-  //   expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, 'New Product Name'));
-  // });
+    // Assert
+    expect(mockDispatch).toHaveBeenCalledWith(saveProductTypeName(product.product_type_id, 'New Product Name'))
+  })
 })

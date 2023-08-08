@@ -38,7 +38,7 @@ export default function useProductType(product, index, productIndex, setCurrentE
   }, [])
 
   const onblur = useCallback((e) => {
-    if (!saveButtonRef.current.id || saveButtonRef.current.id !== (e.target as Element).id) {
+    if (!saveButtonRef?.current?.id || saveButtonRef?.current?.id !== (e.target as Element).id) {
       setCurrentEditId(null)
     }
   }, [])
