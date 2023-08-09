@@ -1,28 +1,28 @@
 # Stage 1 - Build the application
 FROM node:18-alpine AS build
 
-WORKDIR /src
+WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm install --legacy-peer-deps --ignore-scripts
 
-COPY ./environments /src/environments
-COPY ./src	/src/src
-COPY ./babel.config.json /src/babel.config.json
-COPY ./Dockerfile /src/Dockerfile
-COPY ./jest.config.js /src/jest.config.js
-COPY ./nginx.conf /src/nginx.conf
-COPY ./package.json /src/package.json
-COPY ./package-lock.json /src/package-lock.json
-COPY ./paths.js /src/paths.js
-COPY ./postcss.config.js /src/postcss.config.js
-COPY ./prettier.config.js /src/prettier.config.js
-COPY ./README.md /src/README.md
-COPY ./sonar-project.properties	 /src/sonar-project.properties
-COPY ./tailwind.config.js /src/tailwind.config.js
-COPY ./tsconfig.json /src/tsconfig.json
-COPY ./webpack.config.js /src/webpack.config.js
+COPY ./environments /app/environments
+COPY ./src	/app/src
+COPY ./babel.config.json /app/babel.config.json
+COPY ./Dockerfile /app/Dockerfile
+COPY ./jest.config.js /app/jest.config.js
+COPY ./nginx.conf /app/nginx.conf
+COPY ./package.json /app/package.json
+COPY ./package-lock.json /app/package-lock.json
+COPY ./paths.js /app/paths.js
+COPY ./postcss.config.js /app/postcss.config.js
+COPY ./prettier.config.js /app/prettier.config.js
+COPY ./README.md /app/README.md
+COPY ./sonar-project.properties	 /app/sonar-project.properties
+COPY ./tailwind.config.js /app/tailwind.config.js
+COPY ./tsconfig.json /app/tsconfig.json
+COPY ./webpack.config.js /app/webpack.config.js
 
 
 RUN npx tailwindcss -i ./src/styles/start.css -o ./src/styles/final.css
