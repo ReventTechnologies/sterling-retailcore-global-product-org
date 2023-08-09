@@ -19,13 +19,13 @@ module.exports = (webpackConfigEnv, argv) => {
     resolve: {
       alias: {
         Components: path.normalize(`${paths.src}/components`),
-        Containers: path.normalize(`${paths.src}/containers`),
         Assets: path.normalize(`${paths.src}/assets`),
         Redux: path.normalize(`${paths.src}/redux`),
         Utilities: path.normalize(`${paths.src}/utilities`),
         Config: path.normalize(`${paths.src}/config`),
-        Screens: path.normalize(`${paths.src}/screens`),
+        Pages: path.normalize(`${paths.src}/pages`),
         Routes: path.normalize(`${paths.src}/routes`),
+        Types: path.normalize(`${paths.src}/types`),
       },
       symlinks: false,
       cacheWithContext: false,
@@ -37,7 +37,7 @@ module.exports = (webpackConfigEnv, argv) => {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
           type: 'asset/resource',
         },
-        { test: /\.xlsx$/, loader: "webpack-xlsx-loader" },
+        { test: /\.xlsx$/, loader: 'webpack-xlsx-loader' },
       ],
     },
     plugins: [

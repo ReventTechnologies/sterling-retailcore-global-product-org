@@ -41,7 +41,7 @@ const AlertModal = ({
         {loading && (
           <div className='flex flex-col items-center justify-center p-2 text-text-secondary w-fit h-fit'>
             <Spinner size='large' />
-            <h6 className='m-auto mt-2'>{loadingMessage ? `${loadingMessage}...` : ''}</h6>
+            <h6 data-testid='loading-alert' className='m-auto mt-2'>{loadingMessage ? `${loadingMessage}...` : ''}</h6>
           </div>
         )}
 
@@ -49,7 +49,7 @@ const AlertModal = ({
           <div className=' w-full  min-h-[18.75rem] flex flex-col justify-between'>
             <div className='flex justify-end'>
               <button onClick={closeModal}>
-                <img src={Close} />
+                <img src={Close} alt='Close' />
               </button>
             </div>
 

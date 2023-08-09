@@ -3,11 +3,6 @@ import axios from 'axios'
 const PRUNEDGE_AUTH_URL = process.env.PRUNEDGE_AUTH_URL
 
 const configureInterceptor = () => {
-  // const api = axios.create({
-  //   baseURL: process.env.REVENT_BASE_URL,
-  //   // timeout: 10000,
-  // });
-
   // Add a request interceptor to update the access token before each request
   axios.interceptors.request.use(
     async (config) => {
@@ -18,7 +13,6 @@ const configureInterceptor = () => {
       if (accessToken) {
         config.headers['Content-Type'] = 'application/json'
         config.headers['Authorization'] = `Bearer ${accessToken}`
-        // config.headers["environment"] = process.env.ENVIRONMENT
       }
 
       return config
@@ -35,9 +29,9 @@ const configureInterceptor = () => {
     },
     async (error) => {
       const originalRequest = error.config
-      const refreshToken = localStorage.getItem('@sterling_core_refresh') || ''
 
-      // const refreshToken = localStorage.getItem('@sterling_core_token');
+      const refreshToken = localStorage.getItem('@sterling_core_refresh')
+
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
         try {
@@ -45,7 +39,6 @@ const configureInterceptor = () => {
           const response = await axios.post(`${PRUNEDGE_AUTH_URL}/auth/token/refresh/`, {
             refresh: refreshToken,
           })
-          console.log('response', { response })
           // Save the new access token to local storage
           localStorage.setItem('@sterling_core_token', response?.data?.data.access)
 

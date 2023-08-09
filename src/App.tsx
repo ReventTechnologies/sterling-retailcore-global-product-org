@@ -1,13 +1,11 @@
-import { MainScreen } from './screens'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { getRolesAndPermissions, getUserProfile } from 'Redux/actions/UserPersmissions'
 import configureInterceptor from 'Utilities/apiClient'
-
-type Props = {}
+import { Main } from './pages'
 
 configureInterceptor()
-const App = ({}: Props) => {
+const App = () => {
   const dispatch: any = useDispatch()
 
   useEffect(() => {
@@ -15,7 +13,7 @@ const App = ({}: Props) => {
     dispatch(getRolesAndPermissions())
   }, [])
 
-  return <MainScreen />
+  return <Main />
 }
 
 export default App
