@@ -5,7 +5,7 @@ WORKDIR /src
 
 COPY package*.json ./
 
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --ignore-scripts
 
 COPY ./environments /src/environments
 COPY ./src	/src/src
@@ -18,7 +18,6 @@ COPY ./package-lock.json /src/package-lock.json
 COPY ./paths.js /src/paths.js
 COPY ./postcss.config.js /src/postcss.config.js
 COPY ./prettier.config.js /src/prettier.config.js
-COPY ./push.sh /src/push.sh
 COPY ./README.md /src/README.md
 COPY ./sonar-project.properties	 /src/sonar-project.properties
 COPY ./tailwind.config.js /src/tailwind.config.js
