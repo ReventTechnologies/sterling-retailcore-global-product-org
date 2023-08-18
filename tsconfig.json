@@ -8,6 +8,7 @@
     "baseUrl": "./",
     /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     "paths": {
+      "@Sterling/shared": ["src/sterlingShared.d.ts"],
       "Components/*": [
         "src/components/*"
       ],

@@ -33,14 +33,8 @@ export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {
     dispatch({
       type: GET_USER_ROLE_AND_PERMISSIONS_REQUEST,
     })
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-    // Authorization: `Bearer ${token}`
-    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/roles/?page_size=50`, config)
+
+    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/roles/?page_size=50`)
     console.log(data)
     if (data) {
       dispatch({
@@ -63,13 +57,8 @@ export const getUserProfile = () => async (dispatch: Dispatch) => {
     dispatch({
       type: GET_USER_PROFILE_REQUEST,
     })
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/users/profile/`, config)
+
+    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/users/profile/`)
     //  console.log(data)
     if (data?.success) {
       dispatch({
