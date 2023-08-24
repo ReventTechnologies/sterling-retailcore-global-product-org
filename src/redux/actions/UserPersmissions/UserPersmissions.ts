@@ -1,5 +1,4 @@
-// import axios from 'axios'
-import axios from 'axios'
+import { axiosInstance } from '@Sterling/shared'
 import { Dispatch } from 'redux'
 import {
   GET_USER_PROFILE_FAILED,
@@ -7,7 +6,7 @@ import {
   GET_USER_PROFILE_SUCCESS,
   GET_USER_ROLE_AND_PERMISSIONS_FAILED,
   GET_USER_ROLE_AND_PERMISSIONS_REQUEST,
-  GET_USER_ROLE_AND_PERMISSIONS_SUCCESS
+  GET_USER_ROLE_AND_PERMISSIONS_SUCCESS,
 } from 'Redux/constants/UserPersmissions'
 
 const PrunedgeAuthURL = process.env.PRUNEDGE_AUTH_URL
@@ -16,9 +15,9 @@ interface ActionTypes {
   GET_USER_ROLE_AND_PERMISSIONS_FAILED: any
   GET_USER_ROLE_AND_PERMISSIONS_REQUEST: any
   GET_USER_ROLE_AND_PERMISSIONS_SUCCESS: any
-  GET_USER_PROFILE_FAILED: any,
-  GET_USER_PROFILE_REQUEST: any,
-  GET_USER_PROFILE_SUCCESS: any,
+  GET_USER_PROFILE_FAILED: any
+  GET_USER_PROFILE_REQUEST: any
+  GET_USER_PROFILE_SUCCESS: any
 }
 
 interface MessageAction {
@@ -29,24 +28,18 @@ export type setRolesAndPermissionsActionTypes = MessageAction
 
 export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {
   try {
-    const token = localStorage.getItem("@sterling_core_token") ? localStorage.getItem("@sterling_core_token") : null
+    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
 
     dispatch({
       type: GET_USER_ROLE_AND_PERMISSIONS_REQUEST,
     })
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    }
-    // Authorization: `Bearer ${token}`
-    const { data } = await axios.get(`${PrunedgeAuthURL}/roles/?page_size=50`, config)
+
+    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/roles/?page_size=50`)
     console.log(data)
     if (data) {
       dispatch({
         type: GET_USER_ROLE_AND_PERMISSIONS_SUCCESS,
-        payload: data?.results
+        payload: data?.results,
       })
     }
   } catch (error) {
@@ -59,25 +52,19 @@ export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {
 
 export const getUserProfile = () => async (dispatch: Dispatch) => {
   try {
-    const token = localStorage.getItem("@sterling_core_token") ? localStorage.getItem("@sterling_core_token") : null
+    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
 
     dispatch({
       type: GET_USER_PROFILE_REQUEST,
     })
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    }
-    const { data } = await axios.get(`${PrunedgeAuthURL}/users/profile/`, config)
+
+    const { data } = await axiosInstance.get(`${PrunedgeAuthURL}/users/profile/`)
     //  console.log(data)
     if (data?.success) {
       dispatch({
         type: GET_USER_PROFILE_SUCCESS,
-        payload: data?.data
+        payload: data?.data,
       })
-
     }
   } catch (error) {
     dispatch({

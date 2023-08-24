@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axiosInstance } from '@Sterling/shared'
 import { Dispatch } from 'redux'
 import {
   GET_PRODUCT_CATEGORIES_FAILED,
@@ -33,16 +33,6 @@ interface ActionTypes {
 
 const ReventBaseUrl = process.env.REVENT_BASE_URL
 
-const ENVIRONMENT = process.env.ENVIRONMENT
-const token = localStorage.getItem('@sterling_core_token')
-const config = {
-  headers: {
-    // 'Content-Type': 'application/json',
-    // Authorization: `Bearer ${token}`,
-    environment: ENVIRONMENT,
-  },
-}
-
 interface MessageAction {
   type: keyof ActionTypes
   payload: any
@@ -69,7 +59,7 @@ export const getProductCategories = () => async (dispatch: Dispatch) => {
       type: GET_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const { data } = await axios.get(`${ReventBaseUrl}/product-category/all/association`, config)
+    const { data } = await axiosInstance.get(`${ReventBaseUrl}/product-category/all/association`)
 
     if (data.status === 'success') {
       dispatch({
@@ -91,7 +81,7 @@ export const getProductAllCategories = () => async (dispatch: Dispatch) => {
       type: GET_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const { data } = await axios.get(`${ReventBaseUrl}/product-category/all/association`, config)
+    const { data } = await axiosInstance.get(`${ReventBaseUrl}/product-category/all/association`)
 
     if (data.status === 'success') {
       dispatch({
@@ -113,7 +103,7 @@ export const saveGPO = (gpoData) => async (dispatch: Dispatch) => {
       type: SAVE_PRODUCT_CATEGORIES_REQUEST,
     })
 
-    const { data } = await axios.patch(`${ReventBaseUrl}/product-category/save`, gpoData, config)
+    const { data } = await axiosInstance.patch(`${ReventBaseUrl}/product-category/save`, gpoData)
     //  console.log(data)
     if (data?.status === 'success') {
       dispatch({
@@ -140,7 +130,7 @@ export const saveProductTypeName = (productTypeId: string, productTypeName: stri
       type: PRODUCT_TYPE_NAME_REQUEST,
     })
 
-    const { data } = await axios.patch(`${ReventBaseUrl}/product-type/${productTypeId}`, { name: productTypeName }, config)
+    const { data } = await axiosInstance.patch(`${ReventBaseUrl}/product-type/${productTypeId}`, { name: productTypeName })
     if (data?.status === 'success') {
       dispatch({
         type: PRODUCT_TYPE_NAME_SUCCESS,

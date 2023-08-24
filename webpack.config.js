@@ -13,6 +13,7 @@ module.exports = (webpackConfigEnv, argv) => {
   })
 
   return merge(defaultConfig, {
+    externals: ['@Sterling-shared'],
     devServer: {
       port: 8082,
     },

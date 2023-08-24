@@ -42,14 +42,12 @@ export default function useMain() {
   ]
 
   useEffect(() => {
-    if (!productData?.length || saveGPOSaved) {
-      dispatch(getProductCategories())
-      dispatch(getProductAllCategories())
-      if (saveGPOSaved) {
-        dispatch(updateGPOSavedState(false))
-      }
+    dispatch(getProductCategories())
+    dispatch(getProductAllCategories())
+    if (saveGPOSaved) {
+      dispatch(updateGPOSavedState(false))
     }
-  }, [productData, saveGPOSaved])
+  }, [])
 
   useEffect(() => {
     if (productCategoriesData) {
