@@ -1,0 +1,72 @@
+name: Test, Build, Deploy
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  pull_request:
+      types: [opened, synchronize, reopened, closed]
+      branches:
+        - dev
+        - dev2
+        - qa
+        - staging
+        - main
+
+jobs:
+  code_quality:
+    uses: sterling-retailcore-team/workflow-templates/.github/workflows/code_quality.yml@main
+    secrets: inherit
+    with:
+      CODE_COVERAGE: 'node' # specify codebase for code coverage. e.g CODE_COVERAGE: 'node' or CODE_COVERAGE: 'python', e.t.c
+  container_scan:
+    uses: sterling-retailcore-team/workflow-templates/.github/workflows/container_scan.yml@main
+    secrets: inherit
+  build_and_push_image:
+    uses: sterling-retailcore-team/workflow-templates/.github/workflows/build.yml@main
+    needs: [code_quality, container_scan]
+    if: |
+      always() &&
+      (!contains(needs.code_quality.result, 'failure') || !contains(needs.code_quality.result, 'cancelled')) &&
+      (!contains(needs.container_scan.result, 'failure') || !contains(needs.container_scan.result, 'cancelled'))
+    with:
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      GITHUB_BASE_REF: ${GITHUB_BASE_REF}
+      GITHUB_SHA: ${GITHUB_SHA::8}
+      GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}
+      USE_BUILDTIME_ARGS: false # toggle to use buildtime variables
+      DEPLOY_VARIANT_CONTAINER: false # toggle to build a variant
+      USE_VARIANT_BUILDTIME_ARGS: false # toggle to use buildtime variables for variants
+      VARIANT_DOCKERFILE_NAME: '' # name of the variant dockerfile
+      VARIANT_CONTAINER_NAME: '' # provide a name for the container variant if building one
+    secrets:
+      BUILDTIME_ARGS: '' # if using buildtime variables, specify secrets in this format "${{ secrets.example }}"
+      VARIANT_BUILDTIME_ARGS: '' # if using buildtime variables for the variant, specify secrets in this format "${{ secrets.example }}"
+      GH_ACTIONS_PAT: ${{ secrets.GH_ACTIONS_PAT }} # mandatory, do not remove
+
+  deploy_microservice:
+    uses: sterling-retailcore-team/workflow-templates/.github/workflows/deploy.yml@main
+    with:
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      GITHUB_BASE_REF: ${GITHUB_BASE_REF}
+      GITHUB_SHA: ${GITHUB_SHA::8}
+      GITHUB_REPOSITORY_OWNER: ${GITHUB_REPOSITORY_OWNER}
+      GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}
+      DEPLOY_VARIANT_CONTAINER: false # toggle to deploy a variant
+      VARIANT_CONTAINER_NAME: '' # provide a name for the container variant if deploying one
+    secrets: inherit
+    needs: build_and_push_image
+    if: |
+      always() &&
+      (!contains(needs.build_and_push_image.result, 'failure') ||
+      !contains(needs.build_and_push_image.result, 'cancelled'))
+
+  smoke_test:
+    uses: sterling-retailcore-team/workflow-templates/.github/workflows/smoke_tests.yml@main
+    with:
+      MICROSERVICE_URL: ${{ needs.deploy_microservice.outputs.MICROSERVICE_URL }}
+    secrets: inherit
+    needs: deploy_microservice
+    if: |
+      always() &&
+      (!contains(needs.deploy_microservice.result, 'failure') ||
+      !contains(needs.deploy_microservice.result, 'cancelled'))
