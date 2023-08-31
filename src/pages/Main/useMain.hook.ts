@@ -109,7 +109,7 @@ export default function useMain() {
     (ev: any, passedId?: string) => {
       ev.preventDefault()
 
-      let productTypeId: string = passedId ? passedId : ev.dataTransfer.getData('productId')
+      const productTypeId: string = passedId ? passedId : ev.dataTransfer.getData('productId')
       const tempProductData = productData
       const targetProductData = productData[productDataIndex]
       const tempSourceProductData = productData.find((data) => {

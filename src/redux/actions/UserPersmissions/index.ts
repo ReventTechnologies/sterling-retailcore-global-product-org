@@ -1,5 +1,1 @@
-export {
-  type setRolesAndPermissionsActionTypes,
-  getRolesAndPermissions,
-  getUserProfile,
-} from './UserPersmissions'
+export { type setRolesAndPermissionsActionTypes, getRolesAndPermissions, getUserProfile } from './UserPersmissions'

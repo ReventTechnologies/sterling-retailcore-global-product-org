@@ -28,8 +28,6 @@ export type setRolesAndPermissionsActionTypes = MessageAction
 
 export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {
   try {
-    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
-
     dispatch({
       type: GET_USER_ROLE_AND_PERMISSIONS_REQUEST,
     })
@@ -52,8 +50,6 @@ export const getRolesAndPermissions = () => async (dispatch: Dispatch) => {
 
 export const getUserProfile = () => async (dispatch: Dispatch) => {
   try {
-    const token = localStorage.getItem('@sterling_core_token') ? localStorage.getItem('@sterling_core_token') : null
-
     dispatch({
       type: GET_USER_PROFILE_REQUEST,
     })

@@ -4,7 +4,7 @@ declare module '*.html' {
 }
 
 // Put this is for css modules to work
-declare module '*.css';
+declare module '*.css'
 
 declare module '*.bmp' {
   const src: string

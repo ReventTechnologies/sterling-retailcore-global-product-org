@@ -1,5 +1,5 @@
+/* eslint-disable no-undef */
 module.exports = {
-  endOfLine: 'lf',
   jsxBracketSameLine: false,
   jsxSingleQuote: true,
   printWidth: 150,
@@ -10,4 +10,5 @@ module.exports = {
   tabWidth: 2,
   trailingComma: 'es5',
   useTabs: false,
+  endOfLine: 'auto',
 }
