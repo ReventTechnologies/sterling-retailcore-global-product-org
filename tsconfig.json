@@ -9,41 +9,18 @@
     /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     "paths": {
       "@Sterling/shared": ["src/sterlingShared.d.ts"],
-      "Components/*": [
-        "src/components/*"
-      ],
-      "Assets/*": [
-        "src/assets/*"
-      ],
-      "Redux/*": [
-        "src/redux/*"
-      ],
-      "Utilities/*": [
-        "src/utilities/*"
-      ],
-      "Config/*": [
-        "src/config/*"
-      ],
-      "Pages/*": [
-        "src/pages/*"
-      ],
-      "Routes/*": [
-        "src/routes/*"
-      ],"Types/*": [
-        "src/types/*"
-      ]
+      "Components/*": ["src/components/*"],
+      "Assets/*": ["src/assets/*"],
+      "Redux/*": ["src/redux/*"],
+      "Utilities/*": ["src/utilities/*"],
+      "Config/*": ["src/config/*"],
+      "Pages/*": ["src/pages/*"],
+      "Routes/*": ["src/routes/*"],
+      "Types/*": ["src/types/*"]
     },
-    "rootDirs": [
-      "src"
-    ] /* List of root folders whose combined content represents the structure of the project at runtime. */
+    "rootDirs": ["src"] /* List of root folders whose combined content represents the structure of the project at runtime. */
   },
-  "files": [
-    "src/Sterling-global-product-org.tsx"
-  ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/**/*.test*"
-  ]
+  "files": ["src/Sterling-global-product-org.tsx"],
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test*"]
 }
