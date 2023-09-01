@@ -81,4 +81,5 @@ pg.ts
 push.sh
 sonar-project.properties
 Dockerfile
-.github/workflows
+.github/workflows/sonar_scan.yaml
+.github/workflows/test-build-deploy.yml
