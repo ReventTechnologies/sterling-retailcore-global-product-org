@@ -80,3 +80,4 @@ pg.js
 pg.ts
 push.sh
 sonar-project.properties
+Dockerfile
