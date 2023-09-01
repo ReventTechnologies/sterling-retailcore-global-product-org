@@ -81,4 +81,4 @@ pg.ts
 push.sh
 sonar-project.properties
 Dockerfile
-/.github
+.github/workflows
