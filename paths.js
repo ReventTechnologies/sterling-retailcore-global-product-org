@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   //Root of the application
@@ -6,5 +6,4 @@ module.exports = {
 
   // Source files
   src: path.normalize(path.resolve(__dirname, './src')),
-
-};
+}

@@ -5,13 +5,11 @@ import 'typeface-roboto'
 import '@fontsource/inter'
 import './styles/final.css'
 
-
 export default function Root() {
   return (
     <>
       <Provider store={store}>
         <App />
-    
       </Provider>
     </>
   )

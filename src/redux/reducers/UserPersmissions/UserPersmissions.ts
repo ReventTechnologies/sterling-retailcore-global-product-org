@@ -4,13 +4,10 @@ import {
   GET_USER_PROFILE_SUCCESS,
   GET_USER_ROLE_AND_PERMISSIONS_FAILED,
   GET_USER_ROLE_AND_PERMISSIONS_REQUEST,
-  GET_USER_ROLE_AND_PERMISSIONS_SUCCESS
+  GET_USER_ROLE_AND_PERMISSIONS_SUCCESS,
 } from 'Redux/constants/UserPersmissions'
 
-import {
-  setRolesAndPermissionsActionTypes
-} from 'Redux/actions/UserPersmissions'
-
+import { setRolesAndPermissionsActionTypes } from 'Redux/actions/UserPersmissions'
 
 const UserRolesAndPersmissionsInitialState = {
   roles: [],
@@ -21,13 +18,12 @@ const UserRolesAndPersmissionsInitialState = {
 }
 
 export interface UserRolesAndPersmissionsTypes {
-  roles: any[],
-  message: string,
-  loading: boolean,
-  success: boolean,
-  error: boolean,
+  roles: any[]
+  message: string
+  loading: boolean
+  success: boolean
+  error: boolean
 }
-
 
 const UserProfileInitialState = {
   user: {},
@@ -38,15 +34,17 @@ const UserProfileInitialState = {
 }
 
 export interface UserProfileTypes {
-  user: any,
-  message: string,
-  loading: boolean,
-  success: boolean,
-  error: boolean,
+  user: any
+  message: string
+  loading: boolean
+  success: boolean
+  error: boolean
 }
 
-
-export const userRolesAndPermissionsReducer = (state: UserRolesAndPersmissionsTypes = UserRolesAndPersmissionsInitialState, action: setRolesAndPermissionsActionTypes) => {
+export const userRolesAndPermissionsReducer = (
+  state: UserRolesAndPersmissionsTypes = UserRolesAndPersmissionsInitialState,
+  action: setRolesAndPermissionsActionTypes
+) => {
   switch (action.type) {
     case GET_USER_ROLE_AND_PERMISSIONS_REQUEST:
       return { ...state, loading: true, success: false }
@@ -58,7 +56,6 @@ export const userRolesAndPermissionsReducer = (state: UserRolesAndPersmissionsTy
       return state
   }
 }
-
 
 export const userProfileReducer = (state: UserProfileTypes = UserProfileInitialState, action: setRolesAndPermissionsActionTypes) => {
   switch (action.type) {

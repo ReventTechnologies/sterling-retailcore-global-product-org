@@ -25,7 +25,7 @@ const AlertModal = ({
   loading,
   status,
   isOpen,
-  showDate = false
+  showDate = false,
 }: Props) => {
   return (
     <aside
@@ -35,13 +35,16 @@ const AlertModal = ({
       }}
     >
       <div
-        className={`${loading ? 'min-h-[6.25rem] min-w-[7.5rem]' : 'min-h-[18.75rem] min-w-[31.25rem]'}  ${loading ? 'flex justify-center items-center' : ''
-          } bg-white p-6 rounded-2xl `}
+        className={`${loading ? 'min-h-[6.25rem] min-w-[7.5rem]' : 'min-h-[18.75rem] min-w-[31.25rem]'}  ${
+          loading ? 'flex justify-center items-center' : ''
+        } bg-white p-6 rounded-2xl `}
       >
         {loading && (
           <div className='flex flex-col items-center justify-center p-2 text-text-secondary w-fit h-fit'>
             <Spinner size='large' />
-            <h6 data-testid='loading-alert' className='m-auto mt-2'>{loadingMessage ? `${loadingMessage}...` : ''}</h6>
+            <h6 data-testid='loading-alert' className='m-auto mt-2'>
+              {loadingMessage ? `${loadingMessage}...` : ''}
+            </h6>
           </div>
         )}
 
@@ -63,26 +66,28 @@ const AlertModal = ({
             <div className='flex items-center justify-center font-light text-text-secondary'>
               <h6>{message}</h6>
             </div>
-            {
-              showDate ?
-                <div className='flex items-center justify-center font-light text-text-secondary'>
-                  <h6>
-                    DATE AND TIME: {new Date().toDateString()}[{new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}]
-                  </h6>
-                </div>
-                : null
-            }
+            {showDate ? (
+              <div className='flex items-center justify-center font-light text-text-secondary'>
+                <h6>
+                  DATE AND TIME: {new Date().toDateString()}[
+                  {new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}]
+                </h6>
+              </div>
+            ) : null}
 
-            <div className={`flex ${leftClickText && rightClickText ? "justify-between" : "justify-center"} text-text-secondary`}>
-              {leftClickText && <button className='flex items-center justify-center' onClick={leftClick}>
-                <img src={leftArrow} alt='' className='mr-2' />
-                <span>{leftClickText}</span>
-              </button>}
-              {rightClickText &&
+            <div className={`flex ${leftClickText && rightClickText ? 'justify-between' : 'justify-center'} text-text-secondary`}>
+              {leftClickText && (
+                <button className='flex items-center justify-center' onClick={leftClick}>
+                  <img src={leftArrow} alt='' className='mr-2' />
+                  <span>{leftClickText}</span>
+                </button>
+              )}
+              {rightClickText && (
                 <button className='flex items-center justify-center' onClick={rightClick}>
                   {rightClickText}
                   <img className='ml-2' src={rightArrow} alt='' />
-                </button>}
+                </button>
+              )}
             </div>
           </div>
         )}

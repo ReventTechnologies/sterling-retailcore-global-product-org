@@ -4,13 +4,13 @@ concurrency:
   cancel-in-progress: true
 on:
   pull_request:
-      types: [opened, synchronize, reopened, closed]
-      branches:
-        - dev
-        - dev2
-        - qa
-        - staging
-        - main
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - dev
+      - dev2
+      - qa
+      - staging
+      - main
 
 jobs:
   code_quality:
