@@ -74,4 +74,16 @@ describe('useMain', () => {
     // Assert that the necessary actions are called
     expect(mockDispatch).toHaveBeenCalledWith(saveGPO(expect.any(Object)))
   })
+
+  it('should discard changes', () => {
+    // Render the hook
+    const { result } = renderHook(() => useMain())
+
+    // Trigger the onSaveGPO function
+    result.current.onDiscardChanges()
+
+    // Assert that the necessary actions are called
+    expect(mockDispatch).toHaveBeenCalledWith(getProductCategories())
+    expect(mockDispatch).toHaveBeenCalledWith(getProductAllCategories())
+  })
 })

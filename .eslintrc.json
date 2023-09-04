@@ -28,5 +28,5 @@
     "semi": ["error", "never"],
     "react/react-in-jsx-scope": "off"
   },
-  "ignorePatterns": ["**/tests/**", "**/Dockerfile/**","**/assets/**"]
+  "ignorePatterns": ["**/tests/**", "**/Dockerfile/**", "**/assets/**","**/webpack.config.js"]
 }

@@ -1,6 +1,6 @@
 import { arrow } from 'Assets/svgs'
 import { memo, useEffect, useState } from 'react'
-import BreadCrumb from './Goback/BreadCrumb'
+import BreadCrumb from './BreadCrumb'
 
 export const sampleBreadCrumbs = [
   {
@@ -40,9 +40,7 @@ const GoBack = memo(({ breadCrumbsList, headerText }: Props) => {
       <h1 className='text-xl font-bold leading-8 uppercase text-[#747373]'>{headerText}</h1>
 
       <div className='flex gap-4'>
-        {/* <Link to={"/"}> */}
         <img src={arrow} title='Go back' />
-        {/* </Link> */}
         {breadCrumbsList?.map((item: BreadCrumbsListItemType, index: number) => {
           return (
             <BreadCrumb link={item.link} text={item.text} isLastItem={breadCrumbsList ? index === breadCrumbsListLength : false} key={item.link} />
