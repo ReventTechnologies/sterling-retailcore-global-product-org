@@ -5,6 +5,7 @@ function pxToRem(value) {
 }
 
 module.exports = {
+  important: '#global-product-org',
   content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
     extend: {
