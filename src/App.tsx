@@ -11,7 +11,12 @@ const App = () => {
     dispatch(getRolesAndPermissions())
   }, [])
 
-  return <Main />
+  return (
+    <div id='global-product-org'>
+      {' '}
+      <Main />
+    </div>
+  )
 }
 
 export default App

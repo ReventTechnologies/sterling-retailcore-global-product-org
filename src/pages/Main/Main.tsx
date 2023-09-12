@@ -1,6 +1,6 @@
 import { NavigationIcon, info } from 'Assets/svgs'
 import { Button } from 'Components/Button'
-import GoBack from 'Components/MainScreenLayout/GoBack'
+import GoBack from 'Components/MainScreenLayout/Goback/GoBack'
 import { ProductFrame } from 'Components/ProductFrame'
 import AlertModal from 'Components/Shareables/AlertModal'
 import useMain from './useMain.hook'
