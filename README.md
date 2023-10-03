@@ -51,7 +51,7 @@ npm install --force
 Before running the project, you need to set up the environment variables if it doesn't exist. Create a folder named `environments` in the root of the project and in the folder create a file named `.env`. Add the following environment variables:
 
 ```env
-REVENT_BASE_URL=[gpo-api-base-url]
+REVENT_BASE_URL=[product-api-base-url]
 PRUNEDGE_AUTH_URL=[auth-api-base-url]
 ```
 
