@@ -40,7 +40,9 @@ const GoBack = memo(({ breadCrumbsList, headerText }: Props) => {
       <h1 className='text-xl font-bold leading-8 uppercase text-[#747373]'>{headerText}</h1>
 
       <div className='flex gap-4'>
-        <img src={arrow} title='Go back' />
+        <a href={'/configuration/dashboard'}>
+          <img src={arrow} title='Go back' className=' w-4 h-3' />
+        </a>{' '}
         {breadCrumbsList?.map((item: BreadCrumbsListItemType, index: number) => {
           return (
             <BreadCrumb link={item.link} text={item.text} isLastItem={breadCrumbsList ? index === breadCrumbsListLength : false} key={item.link} />
