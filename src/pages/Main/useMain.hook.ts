@@ -33,11 +33,11 @@ export default function useMain() {
   const breadCrumbsList = [
     {
       text: 'CONFIGURATION ENGINE',
-      link: '/config',
+      link: '/configuration/dashboard',
     },
     {
       text: 'GLOBAL PRODUCT ORGANIZATION',
-      link: '/form',
+      link: '/configuration/global-product-organisation',
     },
   ]
 

@@ -5,17 +5,17 @@ interface BreadCrumbProps extends BreadCrumbsListItemType {
   isLastItem: boolean
 }
 
-const BreadCrumb = ({ isLastItem, link, text }: BreadCrumbProps) => {
+export default function BreadCrumb({ isLastItem, link, text }: BreadCrumbProps) {
   return (
     <div className='flex gap-3 items-center '>
-      {text}
+      <a href={link} className={`text-base uppercase font-medium leading-4.5 ${isLastItem ? 'text-[#636363]' : 'text-[#8f8f8f]'}  whitespace-nowrap`}>
+        {text}
+      </a>
       {!isLastItem && (
         <div>
-          <img src={greaterThan} alt='greaterThan' />
+          <img src={greaterThan} className=' h-[.875rem] w-[.4375rem]' />
         </div>
       )}
     </div>
   )
 }
-
-export default BreadCrumb
